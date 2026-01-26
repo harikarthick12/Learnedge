@@ -1,47 +1,51 @@
-version: 2
 services:
-  # Backend API Server
+  # PostgreSQL Database
+  - type: pserv
+    name: learnedge-db
+    env: docker
+    plan: free
+    ipAllowList: []
+
+  # Backend API
   - type: web
     name: learnedge-api
     env: node
-    region: oregon
     plan: free
     buildCommand: cd server && npm install && npx prisma generate && npm run build
     startCommand: cd server && npx prisma migrate deploy && npm run start:prod
+    healthCheckPath: /health
     envVars:
-      - key: NODE_ENV
-        value: production
-      - key: PORT
-        value: 3001
       - key: DATABASE_URL
-        sync: false
+        fromDatabase:
+          name: learnedge-db
+          property: connectionString
       - key: JWT_SECRET
         generateValue: true
       - key: GEMINI_API_KEY
         sync: false
-    healthCheckPath: /health
+      - key: PORT
+        value: 3001
+      - key: NODE_ENV
+        value: production
 
   # Frontend Client
   - type: web
     name: learnedge-client
     env: node
-    region: oregon
     plan: free
     buildCommand: cd client && npm install && npm run build
     startCommand: cd client && npm run start
     envVars:
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: learnedge-api
+          envVarKey: RENDER_EXTERNAL_URL
       - key: NODE_ENV
         value: production
-      - key: NEXT_PUBLIC_API_URL
-        value: https://learnedge-api.onrender.com
 
-  # Database (PostgreSQL)
-  - type: pserv
-    name: learnedge-db
-    env: docker
-    region: oregon
+databases:
+  - name: learnedge-db
+    databaseName: learnedge
+    user: learnedge
     plan: free
-    disk:
-      name: learnedge-data
-      mountPath: /var/lib/postgresql/data
-      sizeGB: 1
