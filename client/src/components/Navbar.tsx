@@ -5,34 +5,13 @@ import { useEffect, useState } from "react";
 
 export default function Navbar() {
     const pathname = usePathname();
-    const router = useRouter();
-    const [user, setUser] = useState<any>(null);
     const [isScrolled, setIsScrolled] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => setIsScrolled(window.scrollY > 20);
         window.addEventListener("scroll", handleScroll);
-
-        const checkUser = () => {
-            const storedUser = localStorage.getItem("user");
-            if (storedUser) setUser(JSON.parse(storedUser));
-        };
-
-        checkUser();
-        window.addEventListener('storage', checkUser);
-
-        return () => {
-            window.removeEventListener("scroll", handleScroll);
-            window.removeEventListener('storage', checkUser);
-        }
+        return () => window.removeEventListener("scroll", handleScroll);
     }, []);
-
-    const handleLogout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        setUser(null);
-        router.push("/");
-    };
 
     const isAuthPage = pathname === "/login" || pathname === "/signup";
     if (isAuthPage) return null;
@@ -52,22 +31,10 @@ export default function Navbar() {
                 </div>
 
                 <div className="flex items-center gap-4">
-                    {user ? (
-                        <div className="flex items-center gap-3">
-                            <span className="text-sm font-bold text-slate-700 hidden sm:block truncate max-w-[120px]">{user.name || user.email.split('@')[0]}</span>
-                            <button
-                                onClick={handleLogout}
-                                className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 hover:text-red-500 transition-colors shadow-sm"
-                            >
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
-                            </button>
-                        </div>
-                    ) : (
-                        <div className="flex gap-4">
-                            <Link href="/login" className="hidden sm:block px-6 py-2.5 font-bold text-slate-600 hover:text-primary-500 transition-colors">Log In</Link>
-                            <Link href="/signup" className="btn-student-primary !py-2.5 !px-6 text-sm">Join Now</Link>
-                        </div>
-                    )}
+                    <Link href="/upload" className="btn-student-primary !py-2.5 !px-6 text-sm flex items-center gap-2">
+                        <span>Start Learning</span>
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                    </Link>
                 </div>
             </div>
         </nav>

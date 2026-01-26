@@ -14,7 +14,6 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { MaterialsService } from './materials.service';
 
 @Controller('materials')
-@UseGuards(JwtAuthGuard)
 export class MaterialsController {
     constructor(private readonly materialsService: MaterialsService) { }
 
@@ -23,24 +22,24 @@ export class MaterialsController {
     async upload(
         @UploadedFile() file: Express.Multer.File,
         @Body('title') title: string,
-        @Request() req,
     ) {
         const text = await this.materialsService.extractText(file);
-        return this.materialsService.create(req.user.userId, title || file.originalname, text);
+        // Using static guest ID
+        return this.materialsService.create('guest-user', title || file.originalname, text);
     }
 
     @Post('raw')
-    async createRaw(@Body() body: { title: string; content: string }, @Request() req) {
-        return this.materialsService.create(req.user.userId, body.title, body.content);
+    async createRaw(@Body() body: { title: string; content: string }) {
+        return this.materialsService.create('guest-user', body.title, body.content);
     }
 
     @Get()
-    async findAll(@Request() req) {
-        return this.materialsService.findAll(req.user.userId);
+    async findAll() {
+        return this.materialsService.findAll('guest-user');
     }
 
     @Get(':id')
-    async findOne(@Param('id') id: string, @Request() req) {
-        return this.materialsService.findOne(id, req.user.userId);
+    async findOne(@Param('id') id: string) {
+        return this.materialsService.findOne(id, 'guest-user');
     }
 }

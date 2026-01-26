@@ -10,9 +10,6 @@ export default function Dashboard() {
     const [user, setUser] = useState<any>(null);
 
     useEffect(() => {
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) setUser(JSON.parse(storedUser));
-
         async function fetchData() {
             try {
                 const [mRes, pRes] = await Promise.all([

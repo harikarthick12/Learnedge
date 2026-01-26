@@ -18,11 +18,11 @@ export default function Home() {
             Turn your boring notes into interactive quizzes and fun lessons. Learn anything faster with AI that explains things like a friend.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center pt-4">
-            <Link href="/signup" className="btn-student-primary text-xl px-12 py-5 hover:scale-105 active:scale-95 transition-all">
-              Join for Free
+            <Link href="/upload" className="btn-student-primary text-xl px-12 py-5 hover:scale-105 active:scale-95 transition-all">
+              Start Learning Now
             </Link>
-            <Link href="/demo" className="btn-student-secondary text-xl px-12 py-5 hover:scale-105 active:scale-95 transition-all">
-              See how it works
+            <Link href="/upload" className="btn-student-secondary text-xl px-12 py-5 hover:scale-105 active:scale-95 transition-all">
+              Try it out
             </Link>
           </div>
         </div>

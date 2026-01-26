@@ -14,8 +14,23 @@ export class MaterialsService {
     async create(userId: string, title: string, content: string) {
         try {
             console.log('[Step 1] Verifying User... ID:', userId);
-            const user = await this.prisma.user.findUnique({ where: { id: userId } });
-            if (!user) throw new NotFoundException('User not found. Please log out and log back in.');
+
+            // Ensure guest user exists
+            if (userId === 'guest-user') {
+                await this.prisma.user.upsert({
+                    where: { id: 'guest-user' },
+                    update: {},
+                    create: {
+                        id: 'guest-user',
+                        email: 'guest@learnedge.com',
+                        password: 'guest-password-placeholder', // Not used for login
+                        name: 'Guest Scholar',
+                    },
+                });
+            } else {
+                const user = await this.prisma.user.findUnique({ where: { id: userId } });
+                if (!user) throw new NotFoundException('User not found.');
+            }
 
             console.log('[Step 2] Sending content to Gemini... Size:', content.length);
             const topics = await this.ai.analyzeMaterial(content);
