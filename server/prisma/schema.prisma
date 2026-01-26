@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(uuid())
+  email     String     @unique
+  password  String
+  name      String?
+  materials Material[]
+  attempts  Attempt[]
+  progress  Progress[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Material {
+  id            String     @id @default(uuid())
+  title         String
+  content       String     // Extracted text
+  userId        String
+  user          User       @relation(fields: [userId], references: [id])
+  questions     Question[]
+  topicAnalysis String?    // JSON representation of topics extracted
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+model Question {
+  id            String   @id @default(uuid())
+  materialId    String
+  material      Material @relation(fields: [materialId], references: [id])
+  type          String   // MCQ, SHORT, LONG
+  questionText  String
+  difficulty    String   // EASY, MEDIUM, HARD
+  options       String?  // JSON stringified options for MCQ
+  correctAnswer String
+  explanation   String?
+  subTopic      String?
+  attempts      Attempt[]
+  createdAt     DateTime @default(now())
+}
+
+model Attempt {
+  id             String   @id @default(uuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  questionId     String
+  question       Question @relation(fields: [questionId], references: [id])
+  studentAnswer  String
+  score          Int      // 0-100
+  isCorrect      Boolean
+  feedback       String?
+  explanation    String?  // Tailored explanation for this attempt
+  analogy        String?
+  memoryTrick    String?
+  realWorldExample String?
+  createdAt      DateTime @default(now())
+}
+
+model Progress {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  topic         String
+  masteryLevel  Int      // 0-100
+  lastAttemptAt DateTime @default(now())
+}
