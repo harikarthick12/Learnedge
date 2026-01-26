@@ -1,0 +1,47 @@
+version: 2
+services:
+  # Backend API Server
+  - type: web
+    name: learnedge-api
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: cd server && npm install && npx prisma generate && npm run build
+    startCommand: cd server && npx prisma migrate deploy && npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: GEMINI_API_KEY
+        sync: false
+    healthCheckPath: /health
+
+  # Frontend Client
+  - type: web
+    name: learnedge-client
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: cd client && npm install && npm run build
+    startCommand: cd client && npm run start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        value: https://learnedge-api.onrender.com
+
+  # Database (PostgreSQL)
+  - type: pserv
+    name: learnedge-db
+    env: docker
+    region: oregon
+    plan: free
+    disk:
+      name: learnedge-data
+      mountPath: /var/lib/postgresql/data
+      sizeGB: 1
