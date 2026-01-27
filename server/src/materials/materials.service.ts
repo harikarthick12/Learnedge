@@ -13,28 +13,32 @@ export class MaterialsService {
 
     async create(userId: string, title: string, content: string) {
         try {
-            console.log('[Step 1] Verifying User... ID:', userId);
+            console.log(`[MaterialsService] Starting creation for user: ${userId}, Title: ${title}`);
 
             // Ensure guest user exists
             if (userId === 'guest-user') {
+                console.log('[MaterialsService] Upserting guest-user...');
                 await this.prisma.user.upsert({
                     where: { id: 'guest-user' },
                     update: {},
                     create: {
                         id: 'guest-user',
                         email: 'guest@learnedge.com',
-                        password: 'guest-password-placeholder', // Not used for login
+                        password: 'guest-password-placeholder',
                         name: 'Guest Scholar',
                     },
                 });
             } else {
                 const user = await this.prisma.user.findUnique({ where: { id: userId } });
-                if (!user) throw new NotFoundException('User not found.');
+                if (!user) {
+                    console.error(`[MaterialsService] User ${userId} not found.`);
+                    throw new NotFoundException('User not found.');
+                }
             }
 
-            console.log('[Step 2] Sending content to Gemini... Size:', content.length);
+            console.log(`[MaterialsService] Sending content to AI for analysis. Content length: ${content.length}`);
             const topics = await this.ai.analyzeMaterial(content);
-            console.log('[Step 3] AI success. Saving material...');
+            console.log('[MaterialsService] AI Analysis successful.');
 
             const material = await this.prisma.material.create({
                 data: {
@@ -44,10 +48,11 @@ export class MaterialsService {
                     topicAnalysis: JSON.stringify(topics),
                 },
             });
-            console.log('[Step 4] Material created! ID:', material.id);
+            console.log(`[MaterialsService] Material saved successfully with ID: ${material.id}`);
             return material;
         } catch (error) {
-            console.error('--- FAIL LOG ---', error);
+            console.error('[MaterialsService] CRITICAL ERROR during material creation:');
+            console.error(error);
             if (error instanceof NotFoundException) throw error;
             throw new InternalServerErrorException(error.message || 'Failed to process material');
         }
@@ -71,34 +76,34 @@ export class MaterialsService {
         if (!file) throw new BadRequestException('No file provided');
 
         const mimetype = file.mimetype;
-        console.log('[Extract] Start. Mime:', mimetype, 'Size:', file.size);
+        const size = file.size;
+        console.log(`[MaterialsService] Extracting text. Mime: ${mimetype}, Size: ${size} bytes`);
 
         try {
             if (mimetype === 'application/pdf') {
-                console.log('[Extract] Parsing PDF...');
-                // Handle different module resolution strategies for pdf-parse
+                console.log('[MaterialsService] Parsing PDF with pdf-parse...');
                 const pdfParser = typeof pdf === 'function' ? pdf : pdf.default;
                 if (typeof pdfParser !== 'function') {
                     throw new Error('PDF parser engine failed to load correctly');
                 }
                 const data = await pdfParser(file.buffer);
-                console.log('[Extract] PDF parsed. Text length:', data.text?.length);
+                console.log(`[MaterialsService] PDF parsed. Extracted characters: ${data.text?.length || 0}`);
                 return data.text || '';
             }
 
             if (mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-                console.log('[Extract] Parsing DOCX...');
+                console.log('[MaterialsService] Parsing DOCX with mammoth...');
                 const data = await mammoth.extractRawText({ buffer: file.buffer });
-                console.log('[Extract] DOCX parsed. Text length:', data.value?.length);
+                console.log(`[MaterialsService] DOCX parsed. Extracted characters: ${data.value?.length || 0}`);
                 return data.value || '';
             }
 
-            console.log('[Extract] Assuming plain text...');
+            console.log('[MaterialsService] Processing as plain text...');
             const text = file.buffer.toString('utf-8');
-            console.log('[Extract] Text read. Length:', text.length);
+            console.log(`[MaterialsService] Text read. Length: ${text.length}`);
             return text;
         } catch (error) {
-            console.error('[Extract] CRITICAL ERROR:', error);
+            console.error('[MaterialsService] Extraction failure:', error);
             throw new InternalServerErrorException(`File processing failed: ${error.message}`);
         }
     }

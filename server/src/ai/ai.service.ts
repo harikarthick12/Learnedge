@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 @Injectable()
@@ -8,15 +8,18 @@ export class AiService {
 
     constructor() {
         const apiKey = process.env.GEMINI_API_KEY;
+        console.log('[AiService] Initializing. API Key present:', !!apiKey);
         if (apiKey && apiKey !== 'your_key_here') {
             this.genAI = new GoogleGenerativeAI(apiKey);
-            this.model = this.genAI.getGenerativeModel({ model: 'gemini-flash-latest' });
+            // Using a more stable model name
+            this.model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
         }
     }
 
     private ensureAiReady() {
         if (!this.genAI) {
-            throw new Error('GEMINI_API_KEY is not set or is still the default in server/.env. AI features are disabled.');
+            console.error('[AiService] GEMINI_API_KEY is missing!');
+            throw new InternalServerErrorException('AI Service configuration missing. Please set GEMINI_API_KEY.');
         }
     }
 
@@ -28,46 +31,46 @@ export class AiService {
             const text = response.text();
             return text;
         } catch (error) {
-            console.error('AI_ERROR_MSG:', error.message);
-            throw new Error(`AI_FAIL: ${error.message}`);
+            console.error('[AiService] Content generation failed:', error.message);
+            throw new InternalServerErrorException(`AI Generation Failed: ${error.message}`);
         }
     }
 
     async generateJson(prompt: string): Promise<any> {
-        const fullPrompt = `${prompt}\n\nIMPORTANT: Return ONLY valid JSON. Do not include markdown formatting or extra text.`;
+        const fullPrompt = `${prompt}\n\nIMPORTANT: Return ONLY valid JSON. Do not include markdown formatting or extra text. If you must use markdown, ensure the JSON is clearly extractable.`;
         const text = await this.generateContent(fullPrompt);
+
         try {
-            const firstBrace = text.indexOf('{');
-            const firstBracket = text.indexOf('[');
-            let startIndex = -1;
-            if (firstBrace !== -1 && (firstBracket === -1 || firstBrace < firstBracket)) {
-                startIndex = firstBrace;
-            } else if (firstBracket !== -1) {
-                startIndex = firstBracket;
+            // More robust extraction of JSON from potential markdown/text wrapper
+            const jsonMatch = text.match(/\[[\s\S]*\]|\{[\s\S]*\}/);
+            const cleanJson = jsonMatch ? jsonMatch[0] : text;
+
+            try {
+                return JSON.parse(cleanJson);
+            } catch (innerError) {
+                // Try one more time by stripping markdown backticks if any
+                const stripped = cleanJson.replace(/```json/g, '').replace(/```/g, '').trim();
+                return JSON.parse(stripped);
             }
-            if (startIndex === -1) throw new Error('No JSON structure found');
-            const lastBrace = text.lastIndexOf('}');
-            const lastBracket = text.lastIndexOf(']');
-            const endIndex = Math.max(lastBrace, lastBracket);
-            const cleanJson = text.substring(startIndex, endIndex + 1).trim();
-            return JSON.parse(cleanJson);
         } catch (error) {
-            console.error('JSON_PARSE_FAIL:', error.message);
-            throw new Error('AI returned invalid JSON');
+            console.error('[AiService] JSON Parsing failed. Response text snippet:', text.substring(0, 100));
+            console.error('[AiService] Error details:', error.message);
+            throw new InternalServerErrorException('AI returned invalid data format');
         }
     }
 
     async analyzeMaterial(content: string) {
+        console.log('[AiService] Analyzing material of length:', content?.length);
         const prompt = `Act as an expert academic tutor. Analyze the following study material and extract the core concepts and subtopics.
     Return a JSON array of objects: [{ "topic": "Name", "description": "Desc", "difficulty": "EASY" | "MEDIUM" | "HARD" }]
-    Content: ${content.substring(0, 15000)}`;
+    Content: ${content.substring(0, 20000)}`; // Increased limit slightly
         return this.generateJson(prompt);
     }
 
     async generateQuestions(content: string, count: number = 10, masteryLevel: number = 50) {
         const prompt = `Generate ${count} exam questions. Mastery Level: ${masteryLevel}%.
     Return as JSON array: [{ "type": "MCQ" | "SHORT" | "LONG", "questionText": "...", "difficulty": "...", "options": [...], "correctAnswer": "...", "explanation": "...", "subTopic": "..." }]
-    Content: ${content.substring(0, 15000)}`;
+    Content: ${content.substring(0, 20000)}`;
         return this.generateJson(prompt);
     }
 

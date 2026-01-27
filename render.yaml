@@ -6,14 +6,14 @@ services:
     plan: free
     ipAllowList: []
 
-  # Backend API
+  # Unified Web App (Frontend + Backend)
   - type: web
-    name: learnedge-api
+    name: learnedge-app
     env: node
     plan: free
-    buildCommand: cd server && npm install && npx prisma generate && npm run build
-    startCommand: cd server && npx prisma migrate deploy && npm run start:prod
-    healthCheckPath: /health
+    buildCommand: npm run install:all && npm run build
+    startCommand: npx prisma migrate deploy --schema server/prisma/schema.prisma && npm start
+    healthCheckPath: /api/health
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -27,22 +27,8 @@ services:
         value: 3001
       - key: NODE_ENV
         value: production
-
-  # Frontend Client
-  - type: web
-    name: learnedge-client
-    env: node
-    plan: free
-    buildCommand: cd client && npm install && npm run build
-    startCommand: cd client && npm run start
-    envVars:
       - key: NEXT_PUBLIC_API_URL
-        fromService:
-          type: web
-          name: learnedge-api
-          envVarKey: RENDER_EXTERNAL_URL
-      - key: NODE_ENV
-        value: production
+        value: "" # Empty means use relative /api prefix
 
 databases:
   - name: learnedge-db

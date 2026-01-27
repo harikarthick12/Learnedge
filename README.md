@@ -74,44 +74,33 @@ This starts:
 
 ## 🌐 Deployment to Render
 
-### Quick Deploy
+### Quick Deploy (Unified)
 
-1. **Push to GitHub** (already done!)
-
+1. **Push to GitHub**
+   
 2. **Create Render Account**
    - Go to [render.com](https://render.com)
    - Sign up with GitHub
 
-3. **Deploy Backend**
+3. **Create PostgreSQL Database**
+   - Click "New +" → "PostgreSQL"
+   - Name: `learnedge-db`
+   - Copy the **Internal Database URL**
+
+4. **Deploy Unified Web App**
    - Click "New +" → "Web Service"
    - Connect your GitHub repo: `harikarthick12/Learnedge`
    - Configure:
-     - **Name**: `learnedge-api`
-     - **Root Directory**: `server`
-     - **Build Command**: `npm install && npx prisma generate && npm run build`
-     - **Start Command**: `npx prisma migrate deploy && npm run start:prod`
+     - **Name**: `learnedge-app`
+     - **Root Directory**: `.` (empty)
+     - **Build Command**: `npm run install:all && npm run build`
+     - **Start Command**: `npx prisma migrate deploy --schema server/prisma/schema.prisma && npm start`
      - **Environment Variables**:
        - `DATABASE_URL`: (from Render PostgreSQL)
        - `GEMINI_API_KEY`: Your Google AI key
        - `JWT_SECRET`: Generate a secure random string
        - `PORT`: 3001
-
-4. **Create PostgreSQL Database**
-   - Click "New +" → "PostgreSQL"
-   - Name: `learnedge-db`
-   - Copy the **Internal Database URL**
-   - Add it to your backend's `DATABASE_URL` environment variable
-
-5. **Deploy Frontend**
-   - Click "New +" → "Web Service"
-   - Connect same repo
-   - Configure:
-     - **Name**: `learnedge-client`
-     - **Root Directory**: `client`
-     - **Build Command**: `npm install && npm run build`
-     - **Start Command**: `npm run start`
-     - **Environment Variables**:
-       - `NEXT_PUBLIC_API_URL`: Your backend URL (e.g., `https://learnedge-api.onrender.com`)
+       - `NEXT_PUBLIC_API_URL`: (leave empty for unified deployment)
 
 ### Environment Variables Reference
 
