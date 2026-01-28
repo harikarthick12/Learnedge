@@ -11,8 +11,11 @@ export class AiService {
         console.log('[AiService] Initializing. API Key present:', !!apiKey);
         if (apiKey && apiKey !== 'your_key_here') {
             this.genAI = new GoogleGenerativeAI(apiKey);
-            // Using a more stable model name
-            this.model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+            // Explicitly set the API version to 'v1' to ensure model compatibility
+            this.model = this.genAI.getGenerativeModel(
+                { model: 'gemini-1.5-flash' },
+                { apiVersion: 'v1' }
+            );
         }
     }
 
