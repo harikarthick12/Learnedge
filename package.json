@@ -2,7 +2,7 @@
     "name": "learnedge-monorepo",
     "version": "1.0.0",
     "scripts": {
-        "install:all": "npm install && cd server && npm install && cd ../client && npm install",
+        "install:all": "npm install && cd server && npm install --include=dev && cd ../client && npm install --include=dev",
         "build": "cd client && npm run build && cd ../server && npm run build",
         "start": "cd server && npm run start:prod",
         "dev:server": "cd server && npm run start:dev",
