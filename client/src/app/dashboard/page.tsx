@@ -127,8 +127,8 @@ export default function Dashboard() {
                                             <p className="text-xs font-bold text-slate-400 uppercase">{new Date(m.createdAt).toLocaleDateString()}</p>
                                         </div>
                                         <div className="flex gap-4">
-                                            <Link href={`/learn/${m.id}`} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-xl text-xs font-bold transition-all">Explore</Link>
-                                            <Link href={`/quiz/${m.id}`} className="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-xl text-xs font-bold transition-all shadow-md active:scale-95">Quiz</Link>
+                                            <Link href={`/learn?id=${m.id}`} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-xl text-xs font-bold transition-all">Explore</Link>
+                                            <Link href={`/quiz?id=${m.id}`} className="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-xl text-xs font-bold transition-all shadow-md active:scale-95">Quiz</Link>
                                         </div>
                                     </div>
                                 ))

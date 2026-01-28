@@ -56,8 +56,8 @@ export default function MaterialsPage() {
                                 </div>
                             </div>
                             <div className="mt-8 pt-6 border-t border-slate-50 flex gap-3">
-                                <Link href={`/learn/${m.id}`} className="flex-1 btn-student-secondary !py-2.5 text-center text-xs">Explore</Link>
-                                <Link href={`/quiz/${m.id}`} className="flex-1 btn-student-primary !py-2.5 text-center text-xs">Quiz</Link>
+                                <Link href={`/learn?id=${m.id}`} className="flex-1 btn-student-secondary !py-2.5 text-center text-xs">Explore</Link>
+                                <Link href={`/quiz?id=${m.id}`} className="flex-1 btn-student-primary !py-2.5 text-center text-xs">Quiz</Link>
                             </div>
                         </div>
                     );

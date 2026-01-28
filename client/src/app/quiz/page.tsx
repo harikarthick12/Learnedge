@@ -1,10 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { quizApi, materialsApi } from "@/lib/api";
+import { Suspense } from "react";
 
-export default function QuizPage() {
-    const { id } = useParams();
+function QuizContent() {
+    const searchParams = useSearchParams();
+    const id = searchParams.get('id');
     const [questions, setQuestions] = useState<any[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [answer, setAnswer] = useState("");
@@ -15,6 +17,7 @@ export default function QuizPage() {
     const router = useRouter();
 
     useEffect(() => {
+        if (!id) return;
         async function initQuiz() {
             try {
                 const matRes = await materialsApi.getOne(id as string);
@@ -213,5 +216,17 @@ export default function QuizPage() {
                 )}
             </div>
         </div>
+    );
+}
+
+export default function QuizPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex justify-center items-center h-[80vh]">
+                <div className="w-12 h-12 border-4 border-primary-200 border-t-primary-500 rounded-full animate-spin"></div>
+            </div>
+        }>
+            <QuizContent />
+        </Suspense>
     );
 }

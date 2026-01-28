@@ -1,16 +1,19 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { materialsApi } from "@/lib/api";
 import Link from "next/link";
+import { Suspense } from "react";
 
-export default function LearnPage() {
-    const { id } = useParams();
+function LearnContent() {
+    const searchParams = useSearchParams();
+    const id = searchParams.get('id');
     const [material, setMaterial] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [activeTopic, setActiveTopic] = useState<number | null>(null);
 
     useEffect(() => {
+        if (!id) return;
         async function fetchMaterial() {
             try {
                 const res = await materialsApi.getOne(id as string);
@@ -58,7 +61,7 @@ export default function LearnPage() {
                         </nav>
                     </div>
                     <Link
-                        href={`/quiz/${id}`}
+                        href={`/quiz?id=${id}`}
                         className="btn-student-primary w-full py-5 flex justify-center items-center gap-3 shadow-2xl text-xl"
                     >
                         🔥 Start Quiz
@@ -113,5 +116,17 @@ export default function LearnPage() {
                 </section>
             </div>
         </main>
+    );
+}
+
+export default function LearnPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex justify-center items-center h-[80vh]">
+                <div className="w-12 h-12 border-4 border-primary-200 border-t-primary-500 rounded-full animate-spin"></div>
+            </div>
+        }>
+            <LearnContent />
+        </Suspense>
     );
 }
