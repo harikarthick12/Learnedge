@@ -82,10 +82,27 @@ export class MaterialsService {
         try {
             if (mimetype === 'application/pdf') {
                 console.log('[MaterialsService] Parsing PDF with pdf-parse...');
-                const pdfParser = typeof pdf === 'function' ? pdf : pdf.default;
-                if (typeof pdfParser !== 'function') {
-                    throw new Error('PDF parser engine failed to load correctly');
+
+                // Handle different ways pdf-parse might be exported
+                let pdfParser: any;
+                if (typeof pdf === 'function') {
+                    pdfParser = pdf;
+                } else if (pdf && typeof pdf.default === 'function') {
+                    pdfParser = pdf.default;
+                } else {
+                    // One last attempt - some environments need direct require
+                    try {
+                        const directPdf = require('pdf-parse');
+                        pdfParser = directPdf;
+                    } catch (e) {
+                        throw new Error('PDF parsing engine failed to initialize');
+                    }
                 }
+
+                if (typeof pdfParser !== 'function' && pdfParser.default) {
+                    pdfParser = pdfParser.default;
+                }
+
                 const data = await pdfParser(file.buffer);
                 console.log(`[MaterialsService] PDF parsed. Extracted characters: ${data.text?.length || 0}`);
                 return data.text || '';
