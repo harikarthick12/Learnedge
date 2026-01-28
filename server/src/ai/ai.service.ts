@@ -68,8 +68,16 @@ export class AiService {
     }
 
     async generateQuestions(content: string, count: number = 10, masteryLevel: number = 50) {
-        const prompt = `Generate ${count} exam questions. Mastery Level: ${masteryLevel}%.
-    Return as JSON array: [{ "type": "MCQ" | "SHORT" | "LONG", "questionText": "...", "difficulty": "...", "options": [...], "correctAnswer": "...", "explanation": "...", "subTopic": "..." }]
+        const prompt = `Act as a prestigious university professor. Generate ${count} diverse exam questions. 
+    Mastery Level targeted: ${masteryLevel}%.
+    
+    CRITICAL: Provide a mix of:
+    - 40% MCQs (Multiple Choice)
+    - 30% SHORT answers (Conceptual explanations)
+    - 30% LONG answers (Deep analysis and writing tasks)
+    
+    Return as JSON array: [{ "type": "MCQ" | "SHORT" | "LONG", "questionText": "...", "difficulty": "...", "options": ["opt1", "opt2"...], "correctAnswer": "...", "explanation": "...", "subTopic": "..." }]
+    
     Content: ${content.substring(0, 20000)}`;
         return this.generateJson(prompt);
     }

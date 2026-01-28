@@ -35,12 +35,18 @@ export default function QuizPage() {
         initQuiz();
     }, [id]);
 
+    const [mistakesInSession, setMistakesInSession] = useState<any[]>([]);
+
     const handleSubmit = async () => {
         if (!answer) return;
         setSubmitting(true);
         try {
             const res = await quizApi.submit(questions[currentIndex].id, answer);
-            setEvaluation(res.data);
+            const evalData = res.data;
+            setEvaluation(evalData);
+            if (!evalData.isCorrect) {
+                setMistakesInSession(prev => [...prev, { ...evalData, question: questions[currentIndex] }]);
+            }
         } catch (err) {
             console.error("Submit failed", err);
         } finally {
@@ -54,6 +60,8 @@ export default function QuizPage() {
         if (currentIndex < questions.length - 1) {
             setCurrentIndex(currentIndex + 1);
         } else {
+            // If mistakes were made, maybe show a summary? 
+            // For now, redirect to dashboard which now has the mistakes section
             router.push("/dashboard");
         }
     };
@@ -133,34 +141,73 @@ export default function QuizPage() {
                     </div>
                 ) : (
                     <div className="space-y-12">
-                        <div className="flex items-center gap-8 bg-slate-50 p-8 rounded-[2rem]">
-                            <div className={`w-28 h-28 rounded-3xl flex items-center justify-center text-4xl font-black text-white ${evaluation.score >= 80 ? 'bg-emerald-500' : evaluation.score >= 50 ? 'bg-warm-500' : 'bg-red-500'}`}>
-                                {evaluation.score}
+                        <div className="flex flex-col md:flex-row items-center gap-8 bg-slate-50 p-10 rounded-[3.5rem] relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-8 opacity-5 font-black text-8xl uppercase tracking-tighter pointer-events-none select-none">
+                                {evaluation.isCorrect ? "Mastered" : "Learning"}
                             </div>
-                            <div>
-                                <h3 className="text-3xl font-black text-slate-800">Score: {evaluation.score}%</h3>
-                                <p className="text-xl text-slate-500 font-bold mt-2">"{evaluation.feedback}"</p>
+
+                            <div className="relative group">
+                                <div className={`w-32 h-32 rounded-[2.5rem] flex items-center justify-center text-4xl font-black text-white shadow-2xl transition-transform group-hover:scale-110 ${evaluation.score >= 80 ? 'bg-emerald-500' : evaluation.score >= 50 ? 'bg-amber-500' : 'bg-rose-500'}`}>
+                                    {evaluation.score}%
+                                </div>
+                                <div className="absolute -bottom-2 -right-2 bg-white w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg text-2xl">
+                                    {evaluation.isCorrect ? "✅" : "⚠️"}
+                                </div>
+                            </div>
+
+                            <div className="flex-1 space-y-2 text-center md:text-left">
+                                <h3 className="text-3xl font-black text-slate-800">
+                                    {evaluation.score >= 80 ? "Stunning Work! 🎉" : evaluation.score >= 50 ? "Solid Effort! 👏" : "Let's Review This 💡"}
+                                </h3>
+                                <p className="text-xl text-slate-500 font-bold italic leading-relaxed">
+                                    "{evaluation.feedback}"
+                                </p>
                             </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div className="space-y-4">
-                                <h4 className="badge bg-primary-100 text-primary-600">Explanation</h4>
-                                <p className="text-lg leading-relaxed text-slate-700 font-medium">{evaluation.explanation}</p>
-                            </div>
-                            <div className="space-y-4">
-                                <h4 className="badge bg-purple-100 text-purple-600">Analogy</h4>
-                                <div className="p-6 bg-purple-50 rounded-3xl italic text-slate-600">
-                                    "{evaluation.analogy}"
+                            <div className="card-premium !bg-white space-y-4 !p-8">
+                                <div className="flex items-center gap-3 mb-2">
+                                    <div className="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center text-primary-600">📖</div>
+                                    <h4 className="font-black text-slate-800 uppercase tracking-widest text-xs">Deep Explanation</h4>
                                 </div>
+                                <p className="text-lg leading-relaxed text-slate-600 font-medium">{evaluation.explanation}</p>
                             </div>
+
+                            <div className="card-premium !bg-purple-50/50 border-purple-100 space-y-4 !p-8">
+                                <div className="flex items-center gap-3 mb-2">
+                                    <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600">🧪</div>
+                                    <h4 className="font-black text-purple-800 uppercase tracking-widest text-xs">The Analogy</h4>
+                                </div>
+                                <p className="text-lg leading-relaxed text-purple-900/70 font-bold italic">"{evaluation.analogy}"</p>
+                            </div>
+
+                            {evaluation.memoryTrick && (
+                                <div className="card-premium !bg-amber-50/50 border-amber-100 space-y-4 !p-8">
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center text-amber-600">🧠</div>
+                                        <h4 className="font-black text-amber-800 uppercase tracking-widest text-xs">Memory Trick</h4>
+                                    </div>
+                                    <p className="text-lg leading-relaxed text-amber-900/70 font-medium">{evaluation.memoryTrick}</p>
+                                </div>
+                            )}
+
+                            {evaluation.realWorldExample && (
+                                <div className="card-premium !bg-blue-50/50 border-blue-100 space-y-4 !p-8">
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600">🌍</div>
+                                        <h4 className="font-black text-blue-800 uppercase tracking-widest text-xs">Real World Case</h4>
+                                    </div>
+                                    <p className="text-lg leading-relaxed text-blue-900/70 font-medium">{evaluation.realWorldExample}</p>
+                                </div>
+                            )}
                         </div>
 
                         <button
                             onClick={nextQuestion}
-                            className="btn-student-primary w-full py-5 text-2xl shadow-xl"
+                            className="btn-student-primary w-full py-6 text-2xl shadow-2xl hover:translate-y-[-4px] active:translate-y-[2px] transition-all"
                         >
-                            {currentIndex < questions.length - 1 ? "Next Question ➡️" : "Return Winner 🏆"}
+                            {currentIndex < questions.length - 1 ? "Carry On! 🚀" : "See Final Score 🏆"}
                         </button>
                     </div>
                 )}

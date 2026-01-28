@@ -104,6 +104,7 @@ export class QuizService {
             where: { userId },
             orderBy: { createdAt: 'desc' },
             take: 50,
+            include: { question: { select: { questionText: true, subTopic: true } } }
         });
 
         const progress = await this.prisma.progress.findMany({
@@ -111,6 +112,28 @@ export class QuizService {
         });
 
         return { attempts, progress };
+    }
+
+    async getMistakesForReview(userId: string) {
+        const mistakes = await this.prisma.attempt.findMany({
+            where: {
+                userId,
+                isCorrect: false
+            },
+            include: {
+                question: {
+                    include: {
+                        material: {
+                            select: { title: true }
+                        }
+                    }
+                }
+            },
+            orderBy: { createdAt: 'desc' },
+            take: 20
+        });
+
+        return mistakes;
     }
 
     async generateRevisionQuiz(userId: string) {

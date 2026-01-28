@@ -48,4 +48,5 @@ export const quizApi = {
     generate: (materialId: string) => api.post(`/quiz/generate/${materialId}`),
     submit: (questionId: string, answer: string) => api.post(`/quiz/submit/${questionId}`, { answer }),
     getPerformance: () => api.get('/quiz/performance'),
+    getMistakes: () => api.get('/quiz/mistakes'),
 };
