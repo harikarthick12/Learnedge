@@ -4,6 +4,7 @@
     "scripts": {
         "install:all": "npm install && cd server && npm install --include=dev && cd ../client && npm install --include=dev",
         "build": "cd client && npm run build && cd ../server && npm run build",
+        "migrate:prod": "cd server && npx prisma@5.22.0 migrate deploy --schema prisma/schema.prisma",
         "start": "cd server && npm run start:prod",
         "dev:server": "cd server && npm run start:dev",
         "dev:client": "cd client && npm run dev",
