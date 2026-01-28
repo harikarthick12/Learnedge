@@ -1,22 +1,20 @@
 import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
 import { PrismaService } from './prisma/prisma.service';
 import { AiService } from './ai/ai.service';
 
 @Controller()
 export class AppController {
   constructor(
-    private readonly appService: AppService,
     private readonly prisma: PrismaService,
     private readonly ai: AiService,
   ) { }
 
-  @Get()
+  @Get('api/welcome')
   getHello(): string {
-    return this.appService.getHello();
+    return 'LearnEdge API is active!';
   }
 
-  @Get('health')
+  @Get('api/health')
   async checkHealth() {
     const status: any = {
       timestamp: new Date().toISOString(),

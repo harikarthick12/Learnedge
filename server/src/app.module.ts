@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { AiModule } from './ai/ai.module';
 import { UsersModule } from './users/users.module';
@@ -29,6 +28,6 @@ import { QuizModule } from './quiz/quiz.module';
     QuizModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [],
 })
 export class AppModule { }
