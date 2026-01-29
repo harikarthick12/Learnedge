@@ -9,9 +9,14 @@
 }
 
 body {
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   color: rgb(var(--foreground-rgb));
   background: #f8fafc;
   min-height: 100vh;
+}
+
+code {
+  font-family: var(--font-geist-mono), monospace;
 }
 
 @layer components {
