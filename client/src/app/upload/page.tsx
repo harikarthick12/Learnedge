@@ -29,7 +29,7 @@ export default function UploadPage() {
             } else {
                 res = await api.post("/materials/raw", { title: title || "Pasted Notes", content: rawText });
             }
-            router.push(`/learn/${res.data.id}`);
+            router.push(`/learn?id=${res.data.id}`);
         } catch (err: any) {
             console.error("Upload debugging:", err);
             const serverMsg = err.response?.data?.message;
