@@ -38,7 +38,8 @@ export default function MaterialsPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {materials.map((m) => {
-                    const topics = m.topicAnalysis ? JSON.parse(m.topicAnalysis) : [];
+                    const raw = m.topicAnalysis ? JSON.parse(m.topicAnalysis) : null;
+                    const topics = Array.isArray(raw) ? raw : (raw?.topics || []);
                     return (
                         <div key={m.id} className="card-premium flex flex-col h-full group">
                             <div className="flex-1 space-y-4">

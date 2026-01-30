@@ -33,7 +33,8 @@ function LearnContent() {
         </div>
     );
 
-    const topics = material?.topicAnalysis ? JSON.parse(material.topicAnalysis) : [];
+    const rawAnalysis = material?.topicAnalysis ? JSON.parse(material.topicAnalysis) : null;
+    const topics = Array.isArray(rawAnalysis) ? rawAnalysis : (rawAnalysis?.topics || []);
 
     return (
         <main className="max-w-7xl mx-auto px-8 py-12">
