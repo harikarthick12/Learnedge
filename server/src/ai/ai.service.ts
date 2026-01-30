@@ -11,8 +11,8 @@ export class AiService {
         console.log('[AiService] Initializing. API Key present:', !!apiKey);
         if (apiKey && apiKey !== 'your_key_here') {
             this.genAI = new GoogleGenerativeAI(apiKey);
-            // Using gemini-2.0-flash as it is available and more capable
-            this.model = this.genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+            // Using gemini-flash-latest for better availability
+            this.model = this.genAI.getGenerativeModel({ model: 'gemini-flash-latest' });
         }
     }
 
@@ -60,11 +60,43 @@ export class AiService {
     }
 
     async analyzeMaterial(content: string) {
-        console.log('[AiService] Analyzing material of length:', content?.length);
-        const prompt = `Act as an expert academic tutor. Analyze the following study material and extract the core concepts and subtopics.
-    Return a JSON array of objects: [{ "topic": "Name", "description": "Desc", "difficulty": "EASY" | "MEDIUM" | "HARD" }]
-    Content: ${content.substring(0, 20000)}`; // Increased limit slightly
+        console.log('[AiService] Analyzing material for structure and concepts');
+        const prompt = `Act as an expert academic tutor. Analyze the following study material.
+    1. Extract core concepts and subtopics with difficulty levels.
+    2. Create a hierarchical "Concept Graph" (mind map structure).
+    
+    Return JSON: 
+    {
+      "topics": [{ "topic": "Name", "description": "Desc", "difficulty": "EASY" | "MEDIUM" | "HARD" }],
+      "conceptGraph": { "name": "Main Topic", "children": [{ "name": "Subtopic", "children": [...] }] }
+    }
+    
+    Content: ${content.substring(0, 20000)}`;
         return this.generateJson(prompt);
+    }
+
+    async generateStudyPlan(content: string, dailyMinutes: number, syllabusSize: string) {
+        const prompt = `Generate a daily AI study plan based on this material content.
+    Syllabus Size: ${syllabusSize}
+    Available daily time: ${dailyMinutes} minutes.
+    
+    Return a JSON array of daily tasks:
+    [{ "day": 1, "tasks": [{ "topic": "...", "duration": "... min", "goal": "..." }] }]
+    
+    Content summary: ${content.substring(0, 5000)}`;
+        return this.generateJson(prompt);
+    }
+
+    async explainInStyle(content: string, style: 'CHILD' | 'EXAM' | 'CODE' | 'ANALOGY') {
+        const stylePrompts = {
+            'CHILD': "Explain this like I'm 10 years old. Use very simple language and relatable examples.",
+            'EXAM': "Explain this for a high-stakes exam. Focus on key definitions, technical terms, and potential exam points.",
+            'CODE': "Explain this with practical code examples (if applicable) or a step-by-step logical algorithm.",
+            'ANALOGY': "Explain this using a powerful, creative analogy that makes the concept unforgettable."
+        };
+
+        const prompt = `${stylePrompts[style]}\n\nContent: ${content}`;
+        return this.generateContent(prompt);
     }
 
     async generateQuestions(content: string, count: number = 10, masteryLevel: number = 50) {
@@ -83,7 +115,25 @@ export class AiService {
     }
 
     async evaluateAnswer(context: string, question: string, studentAnswer: string, idealAnswer: string) {
-        const prompt = `Evaluate answer. Return JSON: { "score": 0-100, "isCorrect": boolean, "feedback": "...", "explanation": "...", "analogy": "...", "memoryTrick": "...", "realWorldExample": "..." }
+        const prompt = `Evaluate the student's answer critically. 
+    Compare the student's answer with the ideal answer.
+    
+    Return JSON: { 
+      "score": 0-100, 
+      "isCorrect": boolean, 
+      "feedback": "Overall feedback",
+      "mistakeAnalysis": {
+        "whatWasWrong": "Specifically what the student got wrong or misinterpreted",
+        "missingPoints": ["Point 1 that was missing", "Point 2..."],
+        "improvementTips": "Practical advice to improve"
+      },
+      "explanation": "Detailed explanation of the concept", 
+      "analogy": "A helpful analogy", 
+      "memoryTrick": "A mnemonic or trick", 
+      "realWorldExample": "..." 
+    }
+    
+    Context: ${context.substring(0, 5000)}
     Question: ${question}
     Student: ${studentAnswer}
     Ideal: ${idealAnswer}`;

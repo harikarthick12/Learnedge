@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -13,10 +13,11 @@ model User {
   password  String
   name      String?
   materials Material[]
-  attempts  Attempt[]
-  progress  Progress[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  attempts   Attempt[]
+  progress   Progress[]
+  studyPlans StudyPlan[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 }
 
 model Material {
@@ -58,9 +59,10 @@ model Attempt {
   feedback       String?
   explanation    String?  // Tailored explanation for this attempt
   analogy        String?
-  memoryTrick    String?
+  memoryTrick     String?
   realWorldExample String?
-  createdAt      DateTime @default(now())
+  timeTaken       Int?      // Time taken in seconds
+  createdAt       DateTime  @default(now())
 }
 
 model Progress {
@@ -68,6 +70,25 @@ model Progress {
   userId        String
   user          User     @relation(fields: [userId], references: [id])
   topic         String
-  masteryLevel  Int      // 0-100
+  masteryLevel  Int      @default(0) // 0-100
+  confidence    Int      @default(0) // 0-100 based on speed and consistency
+  totalAttempts Int      @default(0)
+  correctCount  Int      @default(0)
   lastAttemptAt DateTime @default(now())
+}
+
+model StudyPlan {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  title           String
+  description     String?
+  tasks           String   // JSON array of tasks [{topic, duration, goal}]
+  startDate       DateTime @default(now())
+  endDate         DateTime?
+  syllabusSize    String?  // Small, Medium, Large
+  dailyTimeBudget Int?     // Minutes per day
+  isCompleted     Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }

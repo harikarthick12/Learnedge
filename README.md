@@ -6,9 +6,12 @@ Transform your study materials into interactive, personalized learning experienc
 
 - **AI-Powered Analysis**: Upload PDFs, DOCX, or paste text - AI extracts key concepts automatically
 - **Adaptive Quizzing**: Questions that adjust to your mastery level
-- **Smart Feedback**: Get explanations, analogies, and real-world examples for every answer
-- **Progress Tracking**: Visual mastery charts for each topic
-- **Material Library**: Organize and manage all your study materials in one place
+- **AI Study Planner**: Generate personalized daily schedules based on content and available time
+- **Concept Graphing**: Visual mind-maps showing relationships between study topics
+- **Multi-Style Explanations**: "Explain like I'm 10", "Deep Dive", or "Real-world Analogy" modes
+- **Smart Feedback**: Detailed mistake analysis showing what was missing and how to improve
+- **Confidence Tracking**: Performance metrics based on accuracy, speed, and consistency
+- **Revision Mode**: Automatically target weak topics for focused review
 
 ## 🛠️ Tech Stack
 
@@ -131,8 +134,14 @@ This starts:
 
 ### Quiz
 - `POST /quiz/generate/:materialId` - Generate questions
-- `POST /quiz/submit/:questionId` - Submit answer
-- `GET /quiz/performance` - Get progress stats
+- `POST /quiz/submit/:questionId` - Submit answer (includes mistake analysis)
+- `GET /quiz/performance` - Get progress and confidence stats
+
+### Study & AI
+- `POST /study/plan` - Generate AI study plan
+- `GET /study/plans` - List study plans
+- `GET /study/metrics` - Experience confidence analytics
+- `POST /materials/explain` - Explain content in specific styles (CHILD, EXAM, CODE, ANALOGY)
 
 ## 🔒 Security Notes
 

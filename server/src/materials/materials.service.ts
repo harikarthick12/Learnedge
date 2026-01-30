@@ -37,7 +37,7 @@ export class MaterialsService {
             }
 
             console.log(`[MaterialsService] Sending content to AI for analysis. Content length: ${content.length}`);
-            const topics = await this.ai.analyzeMaterial(content);
+            const analysis = await this.ai.analyzeMaterial(content);
             console.log('[MaterialsService] AI Analysis successful.');
 
             const material = await this.prisma.material.create({
@@ -45,7 +45,7 @@ export class MaterialsService {
                     userId,
                     title,
                     content,
-                    topicAnalysis: JSON.stringify(topics),
+                    topicAnalysis: JSON.stringify(analysis), // Storing both topics and conceptGraph
                 },
             });
             console.log(`[MaterialsService] Material saved successfully with ID: ${material.id}`);
@@ -56,6 +56,10 @@ export class MaterialsService {
             if (error instanceof NotFoundException) throw error;
             throw new InternalServerErrorException(error.message || 'Failed to process material');
         }
+    }
+
+    async getExplanation(content: string, style: 'CHILD' | 'EXAM' | 'CODE' | 'ANALOGY') {
+        return this.ai.explainInStyle(content, style);
     }
 
     async findAll(userId: string) {

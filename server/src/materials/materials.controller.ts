@@ -43,4 +43,9 @@ export class MaterialsController {
     async findOne(@Param('id') id: string, @Request() req: any) {
         return this.materialsService.findOne(id, req.user.userId);
     }
+
+    @Post('explain')
+    async explain(@Body() body: { content: string; style: 'CHILD' | 'EXAM' | 'CODE' | 'ANALOGY' }) {
+        return this.materialsService.getExplanation(body.content, body.style);
+    }
 }

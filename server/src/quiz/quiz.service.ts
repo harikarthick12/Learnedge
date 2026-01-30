@@ -44,7 +44,7 @@ export class QuizService {
         return savedQuestions;
     }
 
-    async submitAnswer(userId: string, questionId: string, studentAnswer: string) {
+    async submitAnswer(userId: string, questionId: string, studentAnswer: string, timeTaken?: number) {
         const question = await this.prisma.question.findUnique({
             where: { id: questionId },
             include: { material: true },
@@ -58,6 +58,15 @@ export class QuizService {
             question.correctAnswer,
         );
 
+        // Map the new mistakeAnalysis structure to feedback if needed, 
+        // or we can just store the whole evaluation JSON if we had a JSON field.
+        // For now, let's append mistakeAnalysis to feedback.
+        let detailedFeedback = evaluation.feedback;
+        if (evaluation.mistakeAnalysis) {
+            const { whatWasWrong, missingPoints, improvementTips } = evaluation.mistakeAnalysis;
+            detailedFeedback += `\n\nWhat was wrong: ${whatWasWrong}\nMissing points: ${missingPoints.join(', ')}\nTips: ${improvementTips}`;
+        }
+
         const attempt = await this.prisma.attempt.create({
             data: {
                 userId,
@@ -65,36 +74,59 @@ export class QuizService {
                 studentAnswer,
                 score: evaluation.score,
                 isCorrect: evaluation.isCorrect,
-                feedback: evaluation.feedback,
+                feedback: detailedFeedback,
                 explanation: evaluation.explanation,
                 analogy: evaluation.analogy,
                 memoryTrick: evaluation.memoryTrick,
                 realWorldExample: evaluation.realWorldExample,
+                timeTaken: timeTaken || 0,
             },
         });
 
         // Update progress
         if (question.subTopic) {
-            await this.updateProgress(userId, question.subTopic, evaluation.score);
+            await this.updateProgress(userId, question.subTopic, evaluation.score, timeTaken || 30);
         }
 
         return attempt;
     }
 
-    private async updateProgress(userId: string, topic: string, score: number) {
+    private async updateProgress(userId: string, topic: string, score: number, timeTaken: number) {
         const existing = await this.prisma.progress.findFirst({
             where: { userId, topic },
         });
 
+        // Confidence logic: 
+        // - High score + fast time = High confidence
+        // - High score + slow time = Medium confidence
+        // - Low score = Low confidence
+        // Base time for a question is ~30 seconds.
+        const speedBonus = timeTaken < 20 ? 10 : (timeTaken < 40 ? 5 : 0);
+        const calculatedConfidence = Math.min(100, score + speedBonus);
+
         if (existing) {
-            const newLevel = Math.round((existing.masteryLevel + score) / 2); // Simple moving average
+            const newLevel = Math.round((existing.masteryLevel + score) / 2);
+            const newConfidence = Math.round((existing.confidence + calculatedConfidence) / 2);
             await this.prisma.progress.update({
                 where: { id: existing.id },
-                data: { masteryLevel: newLevel, lastAttemptAt: new Date() },
+                data: {
+                    masteryLevel: newLevel,
+                    confidence: newConfidence,
+                    totalAttempts: existing.totalAttempts + 1,
+                    correctCount: existing.correctCount + (score > 70 ? 1 : 0),
+                    lastAttemptAt: new Date()
+                },
             });
         } else {
             await this.prisma.progress.create({
-                data: { userId, topic, masteryLevel: score },
+                data: {
+                    userId,
+                    topic,
+                    masteryLevel: score,
+                    confidence: calculatedConfidence,
+                    totalAttempts: 1,
+                    correctCount: score > 70 ? 1 : 0
+                },
             });
         }
     }
