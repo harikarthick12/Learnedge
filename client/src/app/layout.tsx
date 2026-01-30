@@ -17,6 +17,10 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "LearnEdge | AI-Powered Adaptive Learning Platform",
   description: "The intelligent tutor that adapts to your learning pace and material.",
+  icons: {
+    icon: "/icon.png",
+    apple: "/icon.png",
+  },
 };
 
 export default function RootLayout({

@@ -31,7 +31,7 @@ export default function MaterialsPage() {
         <main className="max-w-7xl mx-auto px-8 py-12">
             <div className="flex justify-between items-end mb-12">
                 <div>
-                    <h1 className="text-4xl font-black italic">Your Vault 🏛️</h1>
+                    <h1 className="text-4xl font-black italic">Your Vault</h1>
                     <p className="text-slate-500 font-medium">Manage and review all your uploaded study materials.</p>
                 </div>
             </div>

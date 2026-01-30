@@ -45,7 +45,7 @@ function LearnContent() {
                         ← Dashboard
                     </Link>
                     <div className="card-premium !p-6 border-t-8 border-primary-500">
-                        <h3 className="text-xl font-black mb-6 px-2 text-slate-800 uppercase tracking-tighter">Concepts Brain 🧠</h3>
+                        <h3 className="text-xl font-black mb-6 px-2 text-slate-800 uppercase tracking-tighter">Topic List</h3>
                         <nav className="space-y-2">
                             {topics.map((t: any, i: number) => (
                                 <button
@@ -65,7 +65,7 @@ function LearnContent() {
                         href={`/quiz?id=${id}`}
                         className="btn-student-primary w-full py-5 flex justify-center items-center gap-3 shadow-2xl text-xl"
                     >
-                        🔥 Start Quiz
+                        Start Quiz
                     </Link>
                 </aside>
 
@@ -78,7 +78,7 @@ function LearnContent() {
                                 {topics.length} Concepts
                             </span>
                             <span className="badge bg-emerald-100 text-emerald-600">
-                                AI Ready ✨
+                                AI Ready
                             </span>
                         </div>
                     </header>
@@ -100,9 +100,9 @@ function LearnContent() {
                     ) : (
                         <div className="space-y-12">
                             <div className="bg-primary-500 p-12 rounded-[3.5rem] text-white shadow-2xl">
-                                <h2 className="text-3xl font-black mb-4">Start your Journey!</h2>
+                                <h2 className="text-3xl font-black mb-4">Let's get started!</h2>
                                 <p className="text-xl text-primary-50 font-medium leading-relaxed opacity-90">
-                                    Select a concept from the sidebar to start learning. We've broken down your material into key topics for better retention.
+                                    Pick a topic from the list to start learning. We've simplified your material so it's easier to remember.
                                 </p>
                             </div>
 

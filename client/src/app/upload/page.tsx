@@ -44,8 +44,8 @@ export default function UploadPage() {
         <div className="max-w-4xl mx-auto px-8 py-20">
             <div className="card-premium space-y-10 !p-12 border-t-8 border-primary-500">
                 <div className="text-center space-y-3">
-                    <h1 className="text-4xl font-black text-slate-900 tracking-tight italic">Feed the AI! 🤖</h1>
-                    <p className="text-slate-500 font-bold text-lg">Upload your notes or paste text to transform them into knowledge.</p>
+                    <h1 className="text-4xl font-black text-slate-900 tracking-tight italic">Add your Notes!</h1>
+                    <p className="text-slate-500 font-bold text-lg">Upload a file or paste text to turn them into simple lessons.</p>
                 </div>
 
                 {/* Mode Toggle */}
@@ -66,7 +66,7 @@ export default function UploadPage() {
 
                 {error && (
                     <div className="bg-red-50 text-red-600 p-5 rounded-3xl text-sm font-bold border-2 border-red-100 animate-bounce-soft text-center">
-                        🚫 {error}
+                        {error}
                     </div>
                 )}
 
@@ -103,7 +103,7 @@ export default function UploadPage() {
                             />
                             {file ? (
                                 <div className="space-y-4">
-                                    <div className="text-6xl animate-bounce-soft">📄</div>
+                                    <div className="text-6xl animate-bounce-soft">File</div>
                                     <div>
                                         <p className="text-2xl font-black text-slate-800">{file.name}</p>
                                         <p className="text-sm font-bold text-slate-400 mt-1">{(file.size / 1024 / 1024).toFixed(2)} MB • Ready</p>
@@ -118,7 +118,7 @@ export default function UploadPage() {
                                 </div>
                             ) : (
                                 <div className="space-y-6">
-                                    <div className="text-7xl group-hover:scale-110 transition-transform">📁</div>
+                                    <div className="text-7xl group-hover:scale-110 transition-transform">File</div>
                                     <div>
                                         <p className="text-2xl font-black text-slate-800">Drop your material</p>
                                         <p className="text-slate-400 font-bold mt-2">PDF, DOCX, or TXT (Max 10MB)</p>
@@ -148,7 +148,7 @@ export default function UploadPage() {
                     >
                         {loading ? (
                             <div className="w-6 h-6 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
-                        ) : "Transform into Knowledge ✨"}
+                        ) : "Transform into Knowledge"}
                     </button>
                 </form>
             </div>

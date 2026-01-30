@@ -139,7 +139,7 @@ function QuizContent() {
                             disabled={!answer || submitting}
                             className="btn-student-primary w-full py-5 text-2xl mt-4 shadow-2xl"
                         >
-                            {submitting ? "Analyzing..." : "Check Answer 🚀"}
+                            {submitting ? "Checking..." : "Check my answer!"}
                         </button>
                     </div>
                 ) : (
@@ -154,13 +154,13 @@ function QuizContent() {
                                     {evaluation.score}%
                                 </div>
                                 <div className="absolute -bottom-2 -right-2 bg-white w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg text-2xl">
-                                    {evaluation.isCorrect ? "✅" : "⚠️"}
+                                    {evaluation.isCorrect ? "Correct" : "Try again"}
                                 </div>
                             </div>
 
                             <div className="flex-1 space-y-2 text-center md:text-left">
                                 <h3 className="text-3xl font-black text-slate-800">
-                                    {evaluation.score >= 80 ? "Stunning Work! 🎉" : evaluation.score >= 50 ? "Solid Effort! 👏" : "Let's Review This 💡"}
+                                    {evaluation.score >= 80 ? "Great job!" : evaluation.score >= 50 ? "Not bad!" : "Keep trying!"}
                                 </h3>
                                 <p className="text-xl text-slate-500 font-bold italic leading-relaxed">
                                     "{evaluation.feedback}"
@@ -171,7 +171,7 @@ function QuizContent() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div className="card-premium !bg-white space-y-4 !p-8">
                                 <div className="flex items-center gap-3 mb-2">
-                                    <div className="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center text-primary-600">📖</div>
+                                    <div className="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center text-primary-600">Info</div>
                                     <h4 className="font-black text-slate-800 uppercase tracking-widest text-xs">Deep Explanation</h4>
                                 </div>
                                 <p className="text-lg leading-relaxed text-slate-600 font-medium">{evaluation.explanation}</p>
@@ -179,8 +179,8 @@ function QuizContent() {
 
                             <div className="card-premium !bg-purple-50/50 border-purple-100 space-y-4 !p-8">
                                 <div className="flex items-center gap-3 mb-2">
-                                    <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600">🧪</div>
-                                    <h4 className="font-black text-purple-800 uppercase tracking-widest text-xs">The Analogy</h4>
+                                    <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600">Idea</div>
+                                    <h4 className="font-black text-purple-800 uppercase tracking-widest text-xs">A Simple Story</h4>
                                 </div>
                                 <p className="text-lg leading-relaxed text-purple-900/70 font-bold italic">"{evaluation.analogy}"</p>
                             </div>
@@ -188,7 +188,7 @@ function QuizContent() {
                             {evaluation.memoryTrick && (
                                 <div className="card-premium !bg-amber-50/50 border-amber-100 space-y-4 !p-8">
                                     <div className="flex items-center gap-3 mb-2">
-                                        <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center text-amber-600">🧠</div>
+                                        <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center text-amber-600">Tip</div>
                                         <h4 className="font-black text-amber-800 uppercase tracking-widest text-xs">Memory Trick</h4>
                                     </div>
                                     <p className="text-lg leading-relaxed text-amber-900/70 font-medium">{evaluation.memoryTrick}</p>
@@ -198,7 +198,7 @@ function QuizContent() {
                             {evaluation.realWorldExample && (
                                 <div className="card-premium !bg-blue-50/50 border-blue-100 space-y-4 !p-8">
                                     <div className="flex items-center gap-3 mb-2">
-                                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600">🌍</div>
+                                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600">Note</div>
                                         <h4 className="font-black text-blue-800 uppercase tracking-widest text-xs">Real World Case</h4>
                                     </div>
                                     <p className="text-lg leading-relaxed text-blue-900/70 font-medium">{evaluation.realWorldExample}</p>
@@ -210,7 +210,7 @@ function QuizContent() {
                             onClick={nextQuestion}
                             className="btn-student-primary w-full py-6 text-2xl shadow-2xl hover:translate-y-[-4px] active:translate-y-[2px] transition-all"
                         >
-                            {currentIndex < questions.length - 1 ? "Carry On! 🚀" : "See Final Score 🏆"}
+                            {currentIndex < questions.length - 1 ? "Carry On!" : "See Final Score"}
                         </button>
                     </div>
                 )}

@@ -53,12 +53,12 @@ export default function Dashboard() {
         <main className="max-w-7xl mx-auto px-8 py-12 space-y-12">
             <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                 <div className="space-y-1">
-                    <h1 className="text-4xl font-black text-slate-900 tracking-tight italic">Welcome back, {user?.name || 'Student'}! ✨</h1>
-                    <p className="text-slate-500 font-medium text-lg">You have {mistakes.length} concepts that need your attention today.</p>
+                    <h1 className="text-4xl font-black text-slate-900 tracking-tight italic">Hi, {user?.name || 'Student'}!</h1>
+                    <p className="text-slate-500 font-medium text-lg">You have {mistakes.length} things to review today.</p>
                 </div>
                 <div className="flex gap-4">
                     <Link href="/upload" className="btn-student-primary !py-3 !px-8 text-sm shadow-lg">
-                        Upload New 📄
+                        Add Notes
                     </Link>
                 </div>
             </header>
@@ -76,12 +76,12 @@ export default function Dashboard() {
                 <section className="lg:col-span-2 space-y-10">
                     <div>
                         <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-2xl font-black text-slate-800 italic uppercase tracking-tighter">Mistakes to Crush 🛠️</h2>
+                            <h2 className="text-2xl font-black text-slate-800 italic uppercase tracking-tighter">Things to Practice</h2>
                         </div>
                         <div className="space-y-6">
                             {mistakes.length === 0 ? (
                                 <div className="p-12 bg-emerald-50 rounded-[2.5rem] border-2 border-emerald-100 text-center">
-                                    <p className="text-emerald-600 font-black text-xl">Perfect Score! 🏆</p>
+                                    <p className="text-emerald-600 font-black text-xl">Perfect Score!</p>
                                     <p className="text-emerald-500 font-bold">You don't have any mistakes to review globally. Keep it up!</p>
                                 </div>
                             ) : (
@@ -98,9 +98,9 @@ export default function Dashboard() {
                                                 <p className="text-slate-600 font-medium italic">"{m.studentAnswer}"</p>
                                             </div>
                                             <div className="pt-4 border-t border-slate-100">
-                                                <p className="text-xs font-black text-primary-500 uppercase mb-2">Coach's Tip ✨</p>
+                                                <p className="text-xs font-black text-primary-500 uppercase mb-2">Coach's Tip</p>
                                                 <p className="text-slate-800 font-bold leading-relaxed">{m.explanation}</p>
-                                                {m.analogy && <p className="mt-3 text-slate-500 italic text-sm">💡 "{m.analogy}"</p>}
+                                                {m.analogy && <p className="mt-3 text-slate-500 italic text-sm">{m.analogy}</p>}
                                             </div>
                                         </div>
                                     </div>
@@ -111,8 +111,8 @@ export default function Dashboard() {
 
                     <div className="pt-4">
                         <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-2xl font-black text-slate-800 italic uppercase tracking-tighter">Your Shelf 📚</h2>
-                            <Link href="/materials" className="text-primary-500 font-bold hover:underline">View All Library</Link>
+                            <h2 className="text-2xl font-black text-slate-800 italic uppercase tracking-tighter">My Library</h2>
+                            <Link href="/materials" className="text-primary-500 font-bold hover:underline">See Everything</Link>
                         </div>
                         <div className="grid gap-6">
                             {materials.length === 0 ? (
@@ -138,7 +138,7 @@ export default function Dashboard() {
                 </section>
 
                 <aside className="space-y-8">
-                    <h2 className="text-2xl font-black text-slate-800 italic uppercase tracking-tighter">Skill Tree 📈</h2>
+                    <h2 className="text-2xl font-black text-slate-800 italic uppercase tracking-tighter">Skill Tree</h2>
                     <div className="card-premium space-y-8 !p-8 sticky top-8">
                         {performance?.progress?.length > 0 ? (
                             performance.progress.map((p: any) => (

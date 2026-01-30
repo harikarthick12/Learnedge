@@ -7,22 +7,25 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative w-full max-w-7xl mx-auto px-8 py-20 flex flex-col items-center text-center gap-12">
         <div className="space-y-6 max-w-4xl">
+          <div className="flex justify-center mb-8">
+            <img src="/logo.png" alt="LearnEdge Logo" className="w-32 h-32 rounded-[2.5rem] shadow-2xl animate-float" />
+          </div>
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-50 text-primary-600 font-bold text-sm border-2 border-primary-100">
-            ✨ Study Smarter, Not Harder
+            Study Smarter, Not Harder
           </div>
           <h1 className="text-6xl md:text-8xl font-black text-slate-900 leading-[1.1] tracking-tight italic">
-            Meet Your New <br />
-            <span className="text-gradient">Favorite Tutor.</span>
+            Learning <br />
+            <span className="text-gradient">Made Easy.</span>
           </h1>
           <p className="text-xl md:text-2xl text-slate-600 font-medium max-w-2xl mx-auto leading-relaxed">
-            Turn your boring notes into interactive quizzes and fun lessons. Learn anything faster with AI that explains things like a friend.
+            Turn your notes into fun quizzes and simple lessons. Learn faster with an AI that talks like a friend.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center pt-4">
             <Link href="/signup" className="btn-student-primary text-xl px-12 py-5 hover:scale-105 active:scale-95 transition-all">
-              Sign Up for Free 🎒
+              Start Learning Free
             </Link>
             <Link href="/login" className="btn-student-secondary text-xl px-12 py-5 hover:scale-105 active:scale-95 transition-all outline outline-2 outline-slate-200">
-              Returning Student? Log In
+              I already have an account
             </Link>
           </div>
         </div>
@@ -34,13 +37,13 @@ export default function Home() {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-4xl relative z-10">
               {[
-                { label: "Quizzes", val: "98%", icon: "📝" },
-                { label: "Mastery", val: "High", icon: "🏆" },
-                { label: "Focus", val: "2h/day", icon: "⚡" },
-                { label: "Help", val: "24/7", icon: "🤖" },
+                { label: "Quizzes", val: "98%", icon: "" },
+                { label: "Mastery", val: "High", icon: "" },
+                { label: "Focus", val: "2h/day", icon: "" },
+                { label: "Help", val: "24/7", icon: "" },
               ].map((stat, i) => (
                 <div key={i} className="bg-white p-6 rounded-3xl shadow-lg border border-slate-100 flex flex-col items-center gap-2 hover:scale-110 transition-transform cursor-pointer">
-                  <span className="text-4xl">{stat.icon}</span>
+                  {stat.icon && <span className="text-4xl">{stat.icon}</span>}
                   <span className="font-black text-2xl text-slate-800">{stat.val}</span>
                   <span className="text-sm font-bold text-slate-400 uppercase tracking-tighter">{stat.label}</span>
                 </div>

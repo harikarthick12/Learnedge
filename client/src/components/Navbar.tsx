@@ -33,8 +33,8 @@ export default function Navbar() {
     return (
         <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 flex justify-center ${isScrolled ? 'p-3' : 'p-6'}`}>
             <div className={`w-full max-w-7xl px-6 py-4 rounded-[2rem] flex justify-between items-center transition-all bg-white/90 backdrop-blur-md border border-slate-100 ${isScrolled ? 'shadow-lg py-3 rounded-2xl' : ''}`}>
-                <Link href="/" className="flex items-center gap-2 group">
-                    <div className="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center text-white text-xl font-black group-hover:rotate-12 transition-transform shadow-lg">L</div>
+                <Link href="/" className="flex items-center gap-3 group">
+                    <img src="/logo.png" alt="LearnEdge Logo" className="w-10 h-10 rounded-xl group-hover:rotate-12 transition-transform shadow-lg" />
                     <span className="text-2xl font-black text-slate-800 tracking-tight">LearnEdge</span>
                 </Link>
 
