@@ -34,124 +34,152 @@ export default function UploadPage() {
             console.error("Upload debugging:", err);
             const serverMsg = err.response?.data?.message;
             const detailedMsg = Array.isArray(serverMsg) ? serverMsg.join(", ") : serverMsg;
-            setError(detailedMsg || "Something went wrong. Please check your credentials.");
+            setError(detailedMsg || "Something went wrong. Please check your inputs.");
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="max-w-4xl mx-auto px-8 py-20">
-            <div className="card-premium space-y-10 !p-12 border-t-8 border-primary-500">
-                <div className="text-center space-y-3">
-                    <h1 className="text-4xl font-black text-slate-900 tracking-tight italic">Add your Notes!</h1>
-                    <p className="text-slate-500 font-bold text-lg">Upload a file or paste text to turn them into simple lessons.</p>
-                </div>
+        <main className="relative min-h-screen pt-32 pb-20 px-4 md:px-8 overflow-hidden">
+            <div className="mesh-bg" />
 
-                {/* Mode Toggle */}
-                <div className="flex bg-slate-100 p-2 rounded-2xl w-fit mx-auto gap-2">
-                    <button
-                        onClick={() => setMode("file")}
-                        className={`px-6 py-2 rounded-xl font-bold transition-all ${mode === 'file' ? 'bg-white shadow-sm text-primary-500' : 'text-slate-400'}`}
-                    >
-                        File Upload
-                    </button>
-                    <button
-                        onClick={() => setMode("text")}
-                        className={`px-6 py-2 rounded-xl font-bold transition-all ${mode === 'text' ? 'bg-white shadow-sm text-primary-500' : 'text-slate-400'}`}
-                    >
-                        Paste Text
-                    </button>
-                </div>
+            {/* Background Accents */}
+            <div className="fixed top-20 right-[-10%] w-96 h-96 bg-emerald-500/10 blur-[100px] rounded-full pulse-soft" />
+            <div className="fixed bottom-0 left-[-10%] w-96 h-96 bg-teal-500/10 blur-[100px] rounded-full pulse-soft" />
 
-                {error && (
-                    <div className="bg-red-50 text-red-600 p-5 rounded-3xl text-sm font-bold border-2 border-red-100 animate-bounce-soft text-center">
-                        {error}
-                    </div>
-                )}
-
-                <form onSubmit={handleUpload} className="space-y-8">
-                    <div className="space-y-3">
-                        <label className="text-sm font-black text-slate-700 uppercase tracking-wider px-2">Knowledge Title</label>
-                        <input
-                            type="text"
-                            className="input-student"
-                            placeholder="e.g. Bio Exam Chapter 4"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                        />
-                    </div>
-
-                    {mode === 'file' ? (
-                        <div
-                            className={`relative group border-4 border-dashed rounded-[3rem] p-16 text-center transition-all cursor-pointer ${file ? 'border-primary-400 bg-primary-50/30' : 'border-slate-100 hover:border-primary-300 hover:bg-slate-50'
-                                }`}
-                            onDragOver={(e) => e.preventDefault()}
-                            onDrop={(e) => {
-                                e.preventDefault();
-                                const dropped = e.dataTransfer.files[0];
-                                if (dropped) setFile(dropped);
-                            }}
-                            onClick={() => document.getElementById('fileInput')?.click()}
-                        >
-                            <input
-                                id="fileInput"
-                                type="file"
-                                className="hidden"
-                                accept=".pdf,.docx,.txt"
-                                onChange={(e) => setFile(e.target.files?.[0] || null)}
-                            />
-                            {file ? (
-                                <div className="space-y-4">
-                                    <div className="text-6xl animate-bounce-soft">File</div>
-                                    <div>
-                                        <p className="text-2xl font-black text-slate-800">{file.name}</p>
-                                        <p className="text-sm font-bold text-slate-400 mt-1">{(file.size / 1024 / 1024).toFixed(2)} MB • Ready</p>
-                                    </div>
-                                    <button
-                                        type="button"
-                                        className="text-red-500 font-bold hover:underline text-sm uppercase tracking-widest mt-4"
-                                        onClick={(e) => { e.stopPropagation(); setFile(null); }}
-                                    >
-                                        Change File
-                                    </button>
-                                </div>
-                            ) : (
-                                <div className="space-y-6">
-                                    <div className="text-7xl group-hover:scale-110 transition-transform">File</div>
-                                    <div>
-                                        <p className="text-2xl font-black text-slate-800">Drop your material</p>
-                                        <p className="text-slate-400 font-bold mt-2">PDF, DOCX, or TXT (Max 10MB)</p>
-                                    </div>
-                                    <div className="inline-block bg-white px-6 py-2 rounded-full shadow-sm border-2 border-slate-100 font-bold text-slate-500">
-                                        Browse Files
-                                    </div>
-                                </div>
-                            )}
+            <div className="max-w-4xl mx-auto relative z-10">
+                <div className="glass-morphism space-y-12 p-10 md:p-16 rounded-[3.5rem] border-emerald-500/10 shadow-2xl bg-white/40">
+                    <div className="text-center space-y-4">
+                        <div className="inline-block px-4 py-1.5 rounded-full glass-dark border-emerald-500/5 text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 mb-2">
+                            Initialize Knowledge Base
                         </div>
-                    ) : (
-                        <div className="space-y-3">
-                            <label className="text-sm font-black text-slate-700 uppercase tracking-wider px-2">Paste Content</label>
-                            <textarea
-                                className="input-student min-h-[300px] !p-8 font-medium leading-relaxed"
-                                placeholder="Paste your study material here..."
-                                value={rawText}
-                                onChange={(e) => setRawText(e.target.value)}
-                            />
+                        <h1 className="text-5xl font-black text-slate-900 tracking-tight italic">
+                            Import <span className="grad-text">Intelligence.</span>
+                        </h1>
+                        <p className="text-slate-600 font-medium text-lg max-w-lg mx-auto leading-relaxed">
+                            Upload your study materials or paste raw data to begin neuro-adaptive analysis.
+                        </p>
+                    </div>
+
+                    {/* Mode Toggle */}
+                    <div className="flex glass-dark p-2 rounded-2xl w-fit mx-auto gap-2 border border-emerald-500/5 bg-emerald-500/5">
+                        <button
+                            onClick={() => setMode("file")}
+                            className={`px-8 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${mode === 'file' ? 'bg-white text-emerald-900 shadow-lg' : 'text-slate-500 hover:text-emerald-700'}`}
+                        >
+                            File Ingest
+                        </button>
+                        <button
+                            onClick={() => setMode("text")}
+                            className={`px-8 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${mode === 'text' ? 'bg-white text-emerald-900 shadow-lg' : 'text-slate-500 hover:text-emerald-700'}`}
+                        >
+                            Direct Link
+                        </button>
+                    </div>
+
+                    {error && (
+                        <div className="glass-dark border-accent/20 text-accent p-6 rounded-3xl text-xs font-black tracking-widest uppercase text-center animate-shake">
+                            System Alert: {error}
                         </div>
                     )}
 
-                    <button
-                        type="submit"
-                        disabled={((mode === 'file' ? !file : rawText.length < 20)) || loading}
-                        className="btn-student-primary w-full py-5 text-xl mt-4 disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-3 shadow-2xl"
-                    >
-                        {loading ? (
-                            <div className="w-6 h-6 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
-                        ) : "Transform into Knowledge"}
-                    </button>
-                </form>
+                    <form onSubmit={handleUpload} className="space-y-10">
+                        <div className="space-y-4">
+                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-4">Workspace Title</label>
+                            <input
+                                type="text"
+                                className="w-full glass-dark border border-emerald-500/10 rounded-[1.5rem] px-8 py-5 text-slate-900 placeholder-slate-400 focus:border-emerald-500/50 outline-none transition-all font-semibold italic"
+                                placeholder="e.g. Bio-Dynamic Simulation IV"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                            />
+                        </div>
+
+                        {mode === 'file' ? (
+                            <div
+                                className={`relative group border-2 border-dashed rounded-[3rem] p-4 text-center transition-all cursor-pointer ${file ? 'border-emerald-500/50 bg-emerald-500/5' : 'border-emerald-500/10 hover:border-emerald-500/30 hover:bg-emerald-500/5'
+                                    }`}
+                                onDragOver={(e) => e.preventDefault()}
+                                onDrop={(e) => {
+                                    e.preventDefault();
+                                    const dropped = e.dataTransfer.files[0];
+                                    if (dropped) setFile(dropped);
+                                }}
+                                onClick={() => document.getElementById('fileInput')?.click()}
+                            >
+                                <input id="fileInput" type="file" className="hidden" accept=".pdf,.docx,.txt" onChange={(e) => setFile(e.target.files?.[0] || null)} />
+
+                                <div className="border border-emerald-500/5 rounded-[2.5rem] p-16 space-y-6">
+                                    {file ? (
+                                        <div className="space-y-6">
+                                            <div className="w-20 h-20 bg-emerald-500 rounded-3xl flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(16,185,129,0.3)] transition-transform group-hover:scale-110">
+                                                <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                                            </div>
+                                            <div>
+                                                <p className="text-2xl font-black text-slate-900 italic">{file.name}</p>
+                                                <p className="text-[10px] font-black text-slate-500 mt-2 uppercase tracking-widest">{(file.size / 1024 / 1024).toFixed(2)} MB • SECURE LINK ESTABLISHED</p>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                className="text-accent text-[10px] font-black uppercase tracking-[0.2em] hover:opacity-80 transition-opacity"
+                                                onClick={(e) => { e.stopPropagation(); setFile(null); }}
+                                            >
+                                                TERMINATE CONNECTION
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-8">
+                                            <div className="w-24 h-24 bg-emerald-500/5 rounded-[2.5rem] flex items-center justify-center mx-auto border border-emerald-500/10 group-hover:scale-110 transition-transform duration-500 shadow-xl">
+                                                <svg className="w-12 h-12 text-emerald-600 group-hover:text-emerald-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
+                                            </div>
+                                            <div>
+                                                <p className="text-2xl font-black text-slate-800 italic">Drop Knowledge Unit</p>
+                                                <p className="text-slate-500 font-bold mt-2 uppercase tracking-widest text-[10px]">Neural-compatible formats: PDF, DOCX, TXT</p>
+                                            </div>
+                                            <div className="inline-block glass-dark px-10 py-3 rounded-full border border-emerald-500/10 text-[10px] font-black text-emerald-700 uppercase tracking-[0.3em] group-hover:bg-emerald-500/10 transition-colors bg-emerald-500/5">
+                                                Browse Data
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="space-y-4">
+                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-4">Manual Ingest Port</label>
+                                <textarea
+                                    className="w-full glass-dark border border-emerald-500/10 rounded-[2rem] px-8 py-8 text-slate-900 placeholder-slate-400 focus:border-emerald-500/50 outline-none transition-all font-medium leading-relaxed min-h-[400px] italic"
+                                    placeholder="Paste raw data stream here..."
+                                    value={rawText}
+                                    onChange={(e) => setRawText(e.target.value)}
+                                />
+                            </div>
+                        )}
+
+                        <button
+                            type="submit"
+                            disabled={((mode === 'file' ? !file : rawText.length < 20)) || loading}
+                            className="btn-premium w-full !py-6 !rounded-[2rem] text-sm uppercase tracking-[0.4em] mt-8 disabled:opacity-20 disabled:cursor-not-allowed group relative overflow-hidden"
+                        >
+                            {loading ? (
+                                <div className="flex items-center justify-center gap-4">
+                                    <div className="w-5 h-5 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
+                                    <span className="animate-pulse">Analyzing Neural Path...</span>
+                                </div>
+                            ) : (
+                                <span className="flex items-center justify-center gap-4">
+                                    Finalize Synthesis
+                                    <svg className="w-5 h-5 transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                                </span>
+                            )}
+                        </button>
+                    </form>
+                </div>
             </div>
-        </div>
+
+            {/* Bottom Accent Line */}
+            <div className="fixed bottom-10 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-emerald-500/10 rounded-full" />
+        </main>
     );
 }
+

@@ -35,7 +35,7 @@ export default function Dashboard() {
 
     if (loading) return (
         <div className="flex justify-center items-center h-[80vh]">
-            <div className="w-12 h-12 border-4 border-primary-200 border-t-primary-500 rounded-full animate-spin"></div>
+            <div className="w-16 h-16 border-4 border-emerald-500/20 border-t-emerald-600 rounded-full animate-spin"></div>
         </div>
     );
 
@@ -44,127 +44,156 @@ export default function Dashboard() {
         : 0;
 
     const stats = [
-        { label: "Overall Mastery", val: `${avgMastery}%`, color: "text-primary-600" },
-        { label: "Topics Studied", val: materials.length, color: "text-blue-600" },
-        { label: "Failed Concepts", val: mistakes.length, color: "text-red-500" },
+        { label: "Overall Mastery", val: `${avgMastery}%`, color: "grad-text" },
+        { label: "Total Knowledge", val: materials.length, color: "text-slate-900" },
+        { label: "Focus Areas", val: mistakes.length, color: "text-accent" },
     ];
 
     return (
-        <main className="max-w-7xl mx-auto px-8 py-12 space-y-12">
-            <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                <div className="space-y-1">
-                    <h1 className="text-4xl font-black text-slate-900 tracking-tight italic">Hi, {user?.name || 'Student'}!</h1>
-                    <p className="text-slate-500 font-medium text-lg">You have {mistakes.length} things to review today.</p>
-                </div>
-                <div className="flex gap-4">
-                    <Link href="/upload" className="btn-student-primary !py-3 !px-8 text-sm shadow-lg">
-                        Add Notes
-                    </Link>
-                </div>
-            </header>
+        <main className="relative min-h-screen pt-28 pb-20 px-4 md:px-8">
+            <div className="mesh-bg" />
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {stats.map((stat, i) => (
-                    <div key={i} className="card-premium flex flex-col items-center justify-center text-center !p-10 hover:scale-105 transition-transform cursor-default">
-                        <span className={`text-5xl font-black ${stat.color} mb-2`}>{stat.val}</span>
-                        <span className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em]">{stat.label}</span>
+            <div className="max-w-7xl mx-auto space-y-12 relative z-10">
+                <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                    <div className="space-y-2">
+                        <h1 className="text-5xl font-black text-slate-900 tracking-tight italic">
+                            Welcome, <span className="grad-text">{user?.name || 'Scholar'}</span>.
+                        </h1>
+                        <p className="text-slate-500 font-bold text-lg uppercase tracking-widest text-sm">
+                            System analysis: You have <span className="text-emerald-700">{mistakes.length} insights</span> to review today.
+                        </p>
                     </div>
-                ))}
-            </div>
+                    <div className="flex gap-4">
+                        <Link href="/upload" className="btn-premium !py-3 !px-10 text-sm shadow-emerald-500/30 group">
+                            <span className="flex items-center gap-2">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" /></svg>
+                                Add Intelligence
+                            </span>
+                        </Link>
+                    </div>
+                </header>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 pt-8">
-                <section className="lg:col-span-2 space-y-10">
-                    <div>
-                        <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-2xl font-black text-slate-800 italic uppercase tracking-tighter">Things to Practice</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {stats.map((stat, i) => (
+                        <div key={i} className="glass-morphism flex flex-col items-center justify-center text-center p-10 hover:scale-[1.02] transition-all cursor-default border-emerald-500/10 group hover:border-emerald-500/20 bg-white/40">
+                            <span className={`text-6xl font-black ${stat.color} mb-3 group-hover:scale-110 transition-transform`}>{stat.val}</span>
+                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">{stat.label}</span>
                         </div>
-                        <div className="space-y-6">
-                            {mistakes.length === 0 ? (
-                                <div className="p-12 bg-emerald-50 rounded-[2.5rem] border-2 border-emerald-100 text-center">
-                                    <p className="text-emerald-600 font-black text-xl">Perfect Score!</p>
-                                    <p className="text-emerald-500 font-bold">You don't have any mistakes to review globally. Keep it up!</p>
-                                </div>
-                            ) : (
-                                mistakes.slice(0, 3).map((m) => (
-                                    <div key={m.id} className="card-premium border-l-8 border-red-400 !bg-red-50/30">
-                                        <div className="flex justify-between items-start mb-4">
-                                            <span className="text-xs font-black text-red-500 uppercase tracking-widest">{m.question.material.title}</span>
-                                            <span className="badge bg-red-100 text-red-600">Incorrect</span>
+                    ))}
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 pt-8">
+                    <section className="lg:col-span-2 space-y-12">
+                        <div>
+                            <div className="flex items-center gap-4 mb-8">
+                                <div className="h-8 w-1.5 bg-accent rounded-full"></div>
+                                <h2 className="text-3xl font-black text-slate-900 italic tracking-tight">Active Corrections</h2>
+                            </div>
+
+                            <div className="space-y-6">
+                                {mistakes.length === 0 ? (
+                                    <div className="p-16 glass-morphism border-emerald-500/20 text-center rounded-[3rem] relative overflow-hidden group bg-white/40">
+                                        <div className="absolute inset-0 bg-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                        <div className="relative z-10">
+                                            <p className="text-emerald-600 font-black text-3xl mb-2 italic">Neural Synchronization Complete</p>
+                                            <p className="text-slate-500 font-bold uppercase tracking-widest text-xs">No errors detected in current memory pool.</p>
                                         </div>
-                                        <h3 className="text-xl font-bold text-slate-800 mb-4">Q: {m.question.questionText}</h3>
-                                        <div className="bg-white p-6 rounded-2xl space-y-4 shadow-sm">
-                                            <div>
-                                                <p className="text-xs font-black text-slate-400 uppercase mb-1">Your Answer</p>
-                                                <p className="text-slate-600 font-medium italic">"{m.studentAnswer}"</p>
+                                    </div>
+                                ) : (
+                                    mistakes.slice(0, 3).map((m) => (
+                                        <div key={m.id} className="glass-morphism border-l-4 border-accent p-8 rounded-[2rem] hover:bg-white/40 transition-colors relative overflow-hidden bg-white/20">
+                                            <div className="flex justify-between items-start mb-6">
+                                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{m.question.material.title}</span>
+                                                <span className="px-3 py-1 glass-dark rounded-full text-[10px] font-black text-accent uppercase border border-accent/20 tracking-tighter">Critical Insight</span>
                                             </div>
-                                            <div className="pt-4 border-t border-slate-100">
-                                                <p className="text-xs font-black text-primary-500 uppercase mb-2">Coach's Tip</p>
-                                                <p className="text-slate-800 font-bold leading-relaxed">{m.explanation}</p>
-                                                {m.analogy && <p className="mt-3 text-slate-500 italic text-sm">{m.analogy}</p>}
+                                            <h3 className="text-xl font-bold text-slate-800 mb-6 leading-tight">Q: {m.question.questionText}</h3>
+                                            <div className="bg-emerald-500/5 p-6 rounded-2xl space-y-4 border border-emerald-500/10 shadow-inner">
+                                                <div>
+                                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Previous Entry</p>
+                                                    <p className="text-slate-600 font-medium italic">"{m.studentAnswer}"</p>
+                                                </div>
+                                                <div className="pt-6 border-t border-emerald-500/10">
+                                                    <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-3">Tutor Refinement</p>
+                                                    <p className="text-slate-800 font-bold leading-relaxed">{m.explanation}</p>
+                                                    {m.analogy && <p className="mt-4 text-emerald-700/60 italic text-sm border-l-2 border-emerald-200 pl-4">{m.analogy}</p>}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </div>
+
+                        <div>
+                            <div className="flex justify-between items-center mb-10">
+                                <div className="flex items-center gap-4">
+                                    <div className="h-8 w-1.5 bg-emerald-500 rounded-full"></div>
+                                    <h2 className="text-3xl font-black text-slate-900 italic tracking-tight">Data Repository</h2>
+                                </div>
+                                <Link href="/materials" className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] hover:text-emerald-600 transition-colors">Access All Core</Link>
+                            </div>
+
+                            <div className="grid gap-6">
+                                {materials.length === 0 ? (
+                                    <div className="glass-morphism text-center py-24 rounded-[3rem] border-dashed border-2 border-emerald-500/10 bg-white/20">
+                                        <p className="text-slate-500 font-black uppercase tracking-widest text-xs">Repository Empty. Upload materials to initialize system.</p>
+                                    </div>
+                                ) : (
+                                    materials.slice(0, 4).map((m) => (
+                                        <div key={m.id} className="glass-morphism flex justify-between items-center px-10 py-8 rounded-3xl group transition-all hover:bg-white/40 border-emerald-500/5 bg-white/20">
+                                            <div className="space-y-1">
+                                                <h3 className="text-2xl font-black text-slate-700 group-hover:text-slate-900 transition-colors italic">{m.title}</h3>
+                                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Entry Date: {new Date(m.createdAt).toLocaleDateString()}</p>
+                                            </div>
+                                            <div className="flex gap-4">
+                                                <Link href={`/learn?id=${m.id}`} className="px-6 py-3 glass-dark hover:bg-white/60 rounded-2xl text-[10px] font-black text-emerald-800 uppercase tracking-widest transition-all">Review</Link>
+                                                <Link href={`/quiz?id=${m.id}`} className="btn-premium !py-3 !px-8 !rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all">Simulate</Link>
+                                            </div>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </div>
+                    </section>
+
+                    <aside className="space-y-12">
+                        <div className="flex items-center gap-4 mb-8">
+                            <div className="h-8 w-1.5 bg-teal-500 rounded-full"></div>
+                            <h2 className="text-3xl font-black text-slate-900 italic tracking-tight">Skill Matrix</h2>
+                        </div>
+
+                        <div className="glass-morphism p-10 rounded-[3rem] space-y-10 border-emerald-500/10 sticky top-32 bg-white/40">
+                            {performance?.progress?.length > 0 ? (
+                                performance.progress.map((p: any) => (
+                                    <div key={p.id} className="space-y-4">
+                                        <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
+                                            <span className="text-slate-500 truncate max-w-[150px]">{p.topic}</span>
+                                            <span className="text-emerald-800 bg-emerald-500/5 px-3 py-1 rounded-lg">{p.masteryLevel}%</span>
+                                        </div>
+                                        <div className="w-full bg-emerald-100 h-2.5 rounded-full overflow-hidden border border-emerald-500/5">
+                                            <div
+                                                className={`h-full rounded-full transition-all duration-1000 relative ${p.masteryLevel >= 70 ? 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.5)]' : p.masteryLevel >= 40 ? 'bg-teal-500 shadow-[0_0_15px_rgba(20,184,166,0.5)]' : 'bg-accent shadow-[0_0_15px_rgba(244,63,94,0.5)]'}`}
+                                                style={{ width: `${p.masteryLevel}%` }}
+                                            >
+                                                <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
                                             </div>
                                         </div>
                                     </div>
                                 ))
-                            )}
-                        </div>
-                    </div>
-
-                    <div className="pt-4">
-                        <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-2xl font-black text-slate-800 italic uppercase tracking-tighter">My Library</h2>
-                            <Link href="/materials" className="text-primary-500 font-bold hover:underline">See Everything</Link>
-                        </div>
-                        <div className="grid gap-6">
-                            {materials.length === 0 ? (
-                                <div className="card-premium text-center py-20 bg-slate-50/50 border-dashed border-4 border-slate-200">
-                                    <p className="text-slate-400 font-bold">Your library is currently empty. Start by uploading a study material!</p>
-                                </div>
                             ) : (
-                                materials.slice(0, 4).map((m) => (
-                                    <div key={m.id} className="card-premium flex justify-between items-center group transition-all hover:bg-slate-50">
-                                        <div className="space-y-1">
-                                            <h3 className="text-xl font-bold text-slate-800 group-hover:text-primary-500 transition-colors">{m.title}</h3>
-                                            <p className="text-xs font-bold text-slate-400 uppercase">{new Date(m.createdAt).toLocaleDateString()}</p>
-                                        </div>
-                                        <div className="flex gap-4">
-                                            <Link href={`/learn?id=${m.id}`} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-xl text-xs font-bold transition-all">Explore</Link>
-                                            <Link href={`/quiz?id=${m.id}`} className="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-xl text-xs font-bold transition-all shadow-md active:scale-95">Quiz</Link>
-                                        </div>
-                                    </div>
-                                ))
+                                <p className="text-slate-400 font-bold text-center py-12 text-sm italic">Synchronizing neural data... Start a simulation to begin mapping.</p>
                             )}
-                        </div>
-                    </div>
-                </section>
 
-                <aside className="space-y-8">
-                    <h2 className="text-2xl font-black text-slate-800 italic uppercase tracking-tighter">Skill Tree</h2>
-                    <div className="card-premium space-y-8 !p-8 sticky top-8">
-                        {performance?.progress?.length > 0 ? (
-                            performance.progress.map((p: any) => (
-                                <div key={p.id} className="space-y-2">
-                                    <div className="flex justify-between text-sm font-bold">
-                                        <span className="text-slate-700 truncate max-w-[150px]">{p.topic}</span>
-                                        <span className="text-primary-500">{p.masteryLevel}%</span>
-                                    </div>
-                                    <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                                        <div
-                                            className={`h-full rounded-full transition-all duration-1000 ${p.masteryLevel >= 70 ? 'bg-emerald-500' : p.masteryLevel >= 40 ? 'bg-primary-500' : 'bg-red-400'}`}
-                                            style={{ width: `${p.masteryLevel}%` }}
-                                        ></div>
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <p className="text-slate-400 font-bold text-center py-8">No progress data yet. Take your first quiz!</p>
-                        )}
-
-                        <div className="pt-6 border-t border-slate-100 italic font-medium text-slate-400 text-sm leading-loose">
-                            "The more you sweat in practice, the less you bleed in exams."
+                            <div className="pt-10 border-t border-emerald-500/10 text-center">
+                                <p className="text-slate-400 font-bold italic text-sm leading-relaxed px-4">"The limit of your edge is the limit of your learning."</p>
+                            </div>
                         </div>
-                    </div>
-                </aside>
+                    </aside>
+                </div>
             </div>
         </main>
     );
 }
+
+
+
