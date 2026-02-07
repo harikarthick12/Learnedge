@@ -88,28 +88,39 @@ export class MaterialsService {
                 console.log('[MaterialsService] Parsing PDF with pdf-parse...');
 
                 // Handle different ways pdf-parse might be exported
-                let pdfParser: any;
-                if (typeof pdf === 'function') {
-                    pdfParser = pdf;
-                } else if (pdf && typeof pdf.default === 'function') {
-                    pdfParser = pdf.default;
-                } else {
-                    // One last attempt - some environments need direct require
-                    try {
-                        const directPdf = require('pdf-parse');
-                        pdfParser = directPdf;
-                    } catch (e) {
-                        throw new Error('PDF parsing engine failed to initialize');
+                let pdfParser: any = pdf;
+                let isClass = false;
+
+                if (typeof pdfParser !== 'function') {
+                    if (pdfParser.PDFParse) {
+                        pdfParser = pdfParser.PDFParse;
+                        isClass = true;
+                    } else if (pdfParser.default) {
+                        pdfParser = pdfParser.default;
+                        if (typeof pdfParser !== 'function' && pdfParser.PDFParse) {
+                            pdfParser = pdfParser.PDFParse;
+                            isClass = true;
+                        }
                     }
                 }
 
-                if (typeof pdfParser !== 'function' && pdfParser.default) {
-                    pdfParser = pdfParser.default;
+                if (typeof pdfParser !== 'function') {
+                    console.error('[MaterialsService] pdf-parse import failed to provide a function. Available keys:', Object.keys(pdf));
+                    throw new Error('PDF parsing engine not found or invalid');
                 }
 
-                const data = await pdfParser(file.buffer);
-                console.log(`[MaterialsService] PDF parsed. Extracted characters: ${data.text?.length || 0}`);
-                return data.text || '';
+                let text = '';
+                if (isClass) {
+                    const parser = new pdfParser({ data: file.buffer });
+                    const result = await parser.getText();
+                    text = result.text;
+                    await parser.destroy();
+                } else {
+                    const data = await pdfParser(file.buffer);
+                    text = data.text || '';
+                }
+                console.log(`[MaterialsService] PDF parsed. Extracted characters: ${text?.length || 0}`);
+                return text || '';
             }
 
             if (mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {

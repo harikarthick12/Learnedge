@@ -9,12 +9,12 @@ export class AppController {
     private readonly ai: AiService,
   ) { }
 
-  @Get('api/welcome')
+  @Get('welcome')
   getHello(): string {
     return 'LearnEdge API is active!';
   }
 
-  @Get('api/health')
+  @Get('health')
   async checkHealth() {
     const status: any = {
       timestamp: new Date().toISOString(),
