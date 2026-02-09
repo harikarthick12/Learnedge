@@ -49,21 +49,21 @@ export default function Signup() {
             <div className="glass-morphism w-full max-w-md space-y-12 p-12 md:p-16 rounded-[3.5rem] border-emerald-500/10 shadow-2xl relative z-10 transition-all duration-700 bg-white/40">
                 <div className="text-center space-y-4">
                     <div className="inline-block px-4 py-1 rounded-full glass-dark border-emerald-500/5 text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600">
-                        Registration Port
+                        Sign Up
                     </div>
-                    <h2 className="text-5xl font-black text-slate-900 tracking-tight italic">Initialize <span className="grad-text">Edge.</span></h2>
-                    <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Create an intelligent learning profile.</p>
+                    <h2 className="text-5xl font-black text-slate-900 tracking-tight italic">Create <span className="grad-text">Profile.</span></h2>
+                    <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Start your learning journey today.</p>
                 </div>
 
                 {error && (
                     <div className="glass-dark border-accent/20 text-accent p-5 rounded-2xl text-[10px] font-black tracking-widest uppercase text-center animate-shake">
-                        System Alert: {error}
+                        Error: {error}
                     </div>
                 )}
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="space-y-3">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-4">Entity Name</label>
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-4">Full Name</label>
                         <input
                             type="text"
                             required
@@ -74,7 +74,7 @@ export default function Signup() {
                         />
                     </div>
                     <div className="space-y-3">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-4">Neural Identifier</label>
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-4">Email Address</label>
                         <input
                             type="email"
                             required
@@ -85,7 +85,7 @@ export default function Signup() {
                         />
                     </div>
                     <div className="space-y-3">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-4">Access Code</label>
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-4">Password</label>
                         <div className="relative">
                             <input
                                 type={showPassword ? "text" : "password"}
@@ -98,7 +98,7 @@ export default function Signup() {
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-600 transition-colors"
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-600 hover:text-emerald-800 transition-colors z-20 cursor-pointer p-2"
                             >
                                 {showPassword ? (
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
@@ -118,7 +118,7 @@ export default function Signup() {
                             <div className="w-5 h-5 border-4 border-white/20 border-t-white rounded-full animate-spin mx-auto"></div>
                         ) : (
                             <span className="flex items-center justify-center gap-4">
-                                Create Profile
+                                Sign Up
                                 <svg className="w-4 h-4 transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                             </span>
                         )}
@@ -126,9 +126,9 @@ export default function Signup() {
                 </form>
 
                 <p className="text-center font-black text-slate-400 text-[10px] uppercase tracking-[0.2em]">
-                    Existing Unit?{" "}
+                    Already have an account?{" "}
                     <Link href="/login" className="text-emerald-800 hover:grad-text transition-all underline decoration-emerald-500/20 underline-offset-8">
-                        Login Port
+                        Log In
                     </Link>
                 </p>
             </div>

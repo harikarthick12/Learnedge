@@ -16,7 +16,7 @@ import { StudyModule } from './study/study.module';
     ConfigModule.forRoot({ isGlobal: true }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', 'client', 'out'),
-      exclude: ['/api/(.*)', '/health'],
+      exclude: ['/api*', '/health'],
       serveStaticOptions: {
         extensions: ['html'], // So /login serves /login.html
       }

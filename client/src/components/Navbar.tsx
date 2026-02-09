@@ -50,14 +50,14 @@ export default function Navbar() {
                     ) : (
                         <>
                             <Link href="/login" className="hover:text-emerald-700 transition-colors">Login</Link>
-                            <Link href="/signup" className="hover:text-emerald-700 transition-colors">Join Society</Link>
+                            <Link href="/signup" className="hover:text-emerald-700 transition-colors">Sign Up</Link>
                         </>
                     )}
                 </div>
 
                 <div className="flex items-center gap-4">
                     <Link href={isLoggedIn ? "/upload" : "/signup"} className="btn-premium !py-2.5 !px-6 !rounded-2xl text-xs flex items-center gap-2 shadow-emerald-500/20">
-                        <span>{isLoggedIn ? "Create Space" : "Get Started"}</span>
+                        <span>{isLoggedIn ? "Upload" : "Get Started"}</span>
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                     </Link>
                 </div>

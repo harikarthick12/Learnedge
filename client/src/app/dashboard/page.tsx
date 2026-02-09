@@ -60,14 +60,14 @@ export default function Dashboard() {
                             Welcome, <span className="grad-text">{user?.name || 'Scholar'}</span>.
                         </h1>
                         <p className="text-slate-500 font-bold text-lg uppercase tracking-widest text-sm">
-                            System analysis: You have <span className="text-emerald-700">{mistakes.length} insights</span> to review today.
+                            You have <span className="text-emerald-700">{mistakes.length} mistakes</span> to review today.
                         </p>
                     </div>
                     <div className="flex gap-4">
                         <Link href="/upload" className="btn-premium !py-3 !px-10 text-sm shadow-emerald-500/30 group">
                             <span className="flex items-center gap-2">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" /></svg>
-                                Add Intelligence
+                                Upload Material
                             </span>
                         </Link>
                     </div>
@@ -95,8 +95,8 @@ export default function Dashboard() {
                                     <div className="p-16 glass-morphism border-emerald-500/20 text-center rounded-[3rem] relative overflow-hidden group bg-white/40">
                                         <div className="absolute inset-0 bg-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                         <div className="relative z-10">
-                                            <p className="text-emerald-600 font-black text-3xl mb-2 italic">Neural Synchronization Complete</p>
-                                            <p className="text-slate-500 font-bold uppercase tracking-widest text-xs">No errors detected in current memory pool.</p>
+                                            <p className="text-emerald-600 font-black text-3xl mb-2 italic">All Caught Up!</p>
+                                            <p className="text-slate-500 font-bold uppercase tracking-widest text-xs">No errors found.</p>
                                         </div>
                                     </div>
                                 ) : (
@@ -104,7 +104,7 @@ export default function Dashboard() {
                                         <div key={m.id} className="glass-morphism border-l-4 border-accent p-8 rounded-[2rem] hover:bg-white/40 transition-colors relative overflow-hidden bg-white/20">
                                             <div className="flex justify-between items-start mb-6">
                                                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{m.question.material.title}</span>
-                                                <span className="px-3 py-1 glass-dark rounded-full text-[10px] font-black text-accent uppercase border border-accent/20 tracking-tighter">Critical Insight</span>
+                                                <span className="px-3 py-1 glass-dark rounded-full text-[10px] font-black text-accent uppercase border border-accent/20 tracking-tighter">Review Needed</span>
                                             </div>
                                             <h3 className="text-xl font-bold text-slate-800 mb-6 leading-tight">Q: {m.question.questionText}</h3>
                                             <div className="bg-emerald-500/5 p-6 rounded-2xl space-y-4 border border-emerald-500/10 shadow-inner">
@@ -113,7 +113,7 @@ export default function Dashboard() {
                                                     <p className="text-slate-600 font-medium italic">"{m.studentAnswer}"</p>
                                                 </div>
                                                 <div className="pt-6 border-t border-emerald-500/10">
-                                                    <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-3">Tutor Refinement</p>
+                                                    <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-3">Learn</p>
                                                     <p className="text-slate-800 font-bold leading-relaxed">{m.explanation}</p>
                                                     {m.analogy && <p className="mt-4 text-emerald-700/60 italic text-sm border-l-2 border-emerald-200 pl-4">{m.analogy}</p>}
                                                 </div>
@@ -128,15 +128,15 @@ export default function Dashboard() {
                             <div className="flex justify-between items-center mb-10">
                                 <div className="flex items-center gap-4">
                                     <div className="h-8 w-1.5 bg-emerald-500 rounded-full"></div>
-                                    <h2 className="text-3xl font-black text-slate-900 italic tracking-tight">Data Repository</h2>
+                                    <h2 className="text-3xl font-black text-slate-900 italic tracking-tight">Study Materials</h2>
                                 </div>
-                                <Link href="/materials" className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] hover:text-emerald-600 transition-colors">Access All Core</Link>
+                                <Link href="/materials" className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] hover:text-emerald-600 transition-colors">View All</Link>
                             </div>
 
                             <div className="grid gap-6">
                                 {materials.length === 0 ? (
                                     <div className="glass-morphism text-center py-24 rounded-[3rem] border-dashed border-2 border-emerald-500/10 bg-white/20">
-                                        <p className="text-slate-500 font-black uppercase tracking-widest text-xs">Repository Empty. Upload materials to initialize system.</p>
+                                        <p className="text-slate-500 font-black uppercase tracking-widest text-xs">No materials found. Upload some to get started.</p>
                                     </div>
                                 ) : (
                                     materials.slice(0, 4).map((m) => (
@@ -147,7 +147,7 @@ export default function Dashboard() {
                                             </div>
                                             <div className="flex gap-4">
                                                 <Link href={`/learn?id=${m.id}`} className="px-6 py-3 glass-dark hover:bg-white/60 rounded-2xl text-[10px] font-black text-emerald-800 uppercase tracking-widest transition-all">Review</Link>
-                                                <Link href={`/quiz?id=${m.id}`} className="btn-premium !py-3 !px-8 !rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all">Simulate</Link>
+                                                <Link href={`/quiz?id=${m.id}`} className="btn-premium !py-3 !px-8 !rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all">Quiz</Link>
                                             </div>
                                         </div>
                                     ))
@@ -181,7 +181,7 @@ export default function Dashboard() {
                                     </div>
                                 ))
                             ) : (
-                                <p className="text-slate-400 font-bold text-center py-12 text-sm italic">Synchronizing neural data... Start a simulation to begin mapping.</p>
+                                <p className="text-slate-400 font-bold text-center py-12 text-sm italic">Take a quiz to see your progress.</p>
                             )}
 
                             <div className="pt-10 border-t border-emerald-500/10 text-center">
